@@ -1,0 +1,16 @@
+Source: wasta-core
+Section: utils
+Priority: optional
+Maintainer: Rik Shaw <rikshaw76@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 4.4.0
+Homepage: https://github.com/wasta-linux/wasta-core
+
+Package: wasta-core
+Architecture: all
+Depends: gnupg, ${misc:Depends}
+Recommends: appmenu-registrar, apt-xapian-index, at, debconf-utils, qt5-style-plugins, synaptic, wasta-backup, wasta-menus, wasta-offline, wasta-remastersys, wasta-resources-core, appmenu-registrar, vala-panel-appmenu-common
+Description: Wasta-Linux Core
+ Wasta-Linux core system setup package
+ .
+ This package should be installed on any machine running Wasta-Linux

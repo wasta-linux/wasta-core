@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Zim Desktop Wiki
+Comment=Edit text files "wiki style"
+Exec=zim --plugin trayicon
+Icon=zim
+Type=Application
+Terminal=false
+X-GNOME-Autostart-Delay=15
+X-GNOME-Autostart-enabled=false

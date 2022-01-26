@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=GoldenDict
+Comment=Dictionary / Thesaurus tool
+Exec=goldendict
+Icon=goldendict
+Type=Application
+Terminal=false
+X-GNOME-Autostart-Delay=15
+X-GNOME-Autostart-enabled=false

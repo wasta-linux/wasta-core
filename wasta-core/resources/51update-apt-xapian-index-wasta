@@ -1,0 +1,4 @@
+# After apt update, update-apt-xapian-index needed for Synaptic "Quick Filter"
+APT::Update::Post-Invoke-Success {
+    "if /usr/bin/test -e /usr/sbin/update-apt-xapian-index; then echo 'sleep 10 && /usr/sbin/update-apt-xapian-index --update' | at now > /dev/null 2>&1; fi";
+};

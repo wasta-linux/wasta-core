@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=wasta [Reset]
+Comment=Reset Desktop Interface to Wasta-Linux Defaults
+Exec=wasta-reset
+Terminal=false
+Type=Application
+Icon=wasta-linux
+Categories=Application;System;

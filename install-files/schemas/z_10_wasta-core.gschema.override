@@ -1,0 +1,53 @@
+# ==============================================================================
+# z_10_wasta-core.gschema.override
+#
+#   If same key overridden in 2 files, "last wins" regarding filenames
+#       (so a "z_10_*" filename would win over a "10_*" filename)
+#       wasta-core uses "z_10_*" filenames, regional customizations
+#       use "z_20_*" filenames.
+#
+#   After modifying these .override files, reload with:
+#       glib-compile-schemas /usr/share/glib-2.0/schemas/
+#
+#   2015-10-24 rik: refactoring for Gnome-Shell Ubuntu 15.10
+#   2015-11-05 rik: disabling tracker file CONTENT indexing
+#       - keyboard shortcuts (show desktop, show home, lock screen, help)
+#   2015-11-06 rik: nautilus: ask when opening executable file (rather than
+#       default of just display file not even asking to run it)
+#   2015-12-30 rik: nautilus preference tweaks (icon size, use-tree-view)
+#   2016-09-14 rik: setting unity-greeter default background
+#   2017-11-29 rik: initial bionic settings
+#
+# ==============================================================================
+
+#[org.gnome.desktop.background]
+#show-desktop-icons = true
+#picture-uri = '/usr/share/wasta-core/resources/clarity_by_sigi_sagi.jpg'
+
+#[org.gnome.desktop.interface]
+#clock-format = '12h'
+#clock-show-date = true
+#cursor-theme = 'DMZ-White'
+#font-name = 'Ubuntu 11'
+#gtk-theme = 'Ambiance'
+#icon-theme = 'ubuntu-mono-dark'
+#monospace-font-name = 'Ubuntu Mono 12'
+
+#[org.gnome.desktop.lockdown]
+#disable-user-switching = true
+
+#[org.gnome.desktop.media-handling]
+#automount = true
+#automount-open = false
+
+#[org.gnome.desktop.screensaver]
+#lock-enabled = false
+#picture-uri = '/usr/share/wasta-core/resources/clarity_by_sigi_sagi.jpg'
+#ubuntu-lock-on-suspend = false
+
+#[org.gnome.desktop.wm.preferences]
+#theme = 'Arc-Darker'
+#titlebar-font = 'Ubuntu Bold 11'
+
+#[org.gnome.login-screen]
+#logo = '/usr/share/wasta-core/resources/wasta-linux.png'

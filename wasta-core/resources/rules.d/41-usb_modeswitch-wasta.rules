@@ -1,0 +1,262 @@
+# Part of usb-modeswitch-data, version 20160803
+#
+# Works with usb_modeswitch versions >= 2.4.0 (extension of StandardEject)
+#
+ACTION!="add|change", GOTO="modeswitch_rules_end"
+
+# Adds a symlink "gsmmodem[n]" to the lowest ttyUSB port with interrupt
+# transfer; checked against a list of known modems, or else no action
+KERNEL=="ttyUSB*", ATTRS{bNumConfigurations}=="*", PROGRAM="usb_modeswitch --symlink-name %p %s{idVendor} %s{idProduct} %E{PRODUCT}", SYMLINK+="%c"
+
+SUBSYSTEM!="usb", ACTION!="add",, GOTO="modeswitch_rules_end"
+
+# 2016-09-23 rik: Ubuntu 16.04 (possibly 14.04?) doesn't switch Huawei modems
+# using the "generic Huawei rule" except for the "first time" after boot:
+# ATTRS{idVendor}=="12d1", ATTRS{manufacturer}!="Android", ATTR{bInterfaceNumber}=="00", ATTR{bInterfaceClass}=="08", RUN+="usb_modeswitch '%b/%k'"
+#
+# But, if add back explicit Huawei modem rules, then will switch "every time".
+
+# Huawei 12d1:1c0b
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1c0b", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1c1b
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1c1b", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1c24
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1c24", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1c25
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1c25", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1d50
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1d50", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1da1
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1da1", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f01
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f01", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f1b
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f1b", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f1c
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f1c", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f1d
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f1d", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f1e
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f1e", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f02
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f02", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f03
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f03", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f04
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f04", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f05
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f05", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f06
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f06", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f07
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f07", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f09
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f09", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f11
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f11", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f15
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f15", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f16
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f16", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f17
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f17", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f18
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f18", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1f19
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1f19", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:14ad
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="14ad", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:14b5
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="14b5", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:14b7
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="14b7", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:14ba
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="14ba", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:14c1
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="14c1", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:14c3
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="14c3", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:14c4
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="14c4", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:14c5
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="14c5", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:14d1
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="14d1", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:14fe
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="14fe", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:15bb
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="15bb", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:15c0
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="15c0", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:15c1
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="15c1", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:15ca
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="15ca", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:15cd
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="15cd", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:15ce
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="15ce", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:15cf
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="15cf", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:15d0
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="15d0", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:15d2
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="15d2", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:15e7
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="15e7", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:15f0
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="15f0", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:101e
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="101e", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:151a
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="151a", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:155a
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="155a", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:155b
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="155b", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:156a
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="156a", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:157c
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="157c", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:157d
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="157d", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:380b
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="380b", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1001
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1001", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1003
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1003", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1009
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1009", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1010
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1010", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1030
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1030", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1031
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1031", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1413
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1413", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1414
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1414", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1446
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1446", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1449
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1449", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1505
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1505", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1520
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1520", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1521
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1521", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1523
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1523", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1526
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1526", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1527
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1527", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1553
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1553", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1557
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1557", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1570
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1570", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1571
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1571", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1572
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1572", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1573
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1573", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1580
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1580", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1581
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1581", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1582
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1582", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1583
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1583", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1597
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1597", RUN+="usb_modeswitch '%b/%k'"
+
+# Huawei 12d1:1805
+ATTR{idVendor}=="12d1", ATTR{idProduct}=="1805", RUN+="usb_modeswitch '%b/%k'"
+
+LABEL="modeswitch_rules_end"

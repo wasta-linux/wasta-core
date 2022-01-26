@@ -1,0 +1,11 @@
+install-files/applications                 usr/share
+install-files/apt.conf.d                   etc/apt
+install-files/bin                          usr
+install-files/dpkg.cfg.d                   etc/dpkg
+install-files/icons                        usr/share
+install-files/modules.d                    usr/share/initramfs-tools
+install-files/schemas                      usr/share/glib-2.0
+install-files/sysctl.d                     etc
+install-files/org.wastalinux.apps.policy   usr/share/polkit-1/actions
+install-files/wasta-release                etc
+wasta-core                                 usr/share

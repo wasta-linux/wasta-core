@@ -1,0 +1,262 @@
+#!/bin/bash
+
+# ==============================================================================
+# Wasta-Reset
+#
+# This script can be run at any time to "reset" Wasta-Linux defaults.
+#
+#   Gnome-Shell has no such reset facility.
+#
+#   Cinnamon does have a "Restore all settings to defaults" option, but
+#   then things like favorites and user background are lost.  Also, nemo not
+#   reset.  So, this script supercedes the Cinnamon "restore all settings",
+#   which was removed from the panel context menu.
+#
+#   2012-10-20 rik: Initial script - for Linux Mint 13 Maya Cinnamon
+#   2013-01-02 rik: Adjusted to be generic for any distro using Cinnamon DE.
+#       (so, can use for Ubuntu OR Mint)
+#   2013-06-19 rik: Updated for Cinnamon 1.8.x compatibility
+#   2013-06-28 rik: added "sleep" commands to help not crash Cinnamon on resets
+#       (best guess is that applying too many fixes too quickly may crash it,
+#        as all settings can be done individually from terminal w/o crashes)
+#   2013-10-25 rik: Updated for Cinnamon 2.0.x compatibility.  Refactored to
+#       take advantage of gschema.override setup (noted above).  Also, tracked
+#       down crashes to some key in wm.preferences location.  So, worked around
+#       that.  *shouldn't be crashing anymore on reset*???
+#   2013-12-02 rik: Minor documentation cleanup.
+#   2013-12-16 rik: Updating for Cinnamon 2.0 compatibility - background replace
+#   2014-05-23 rik: Updating for 14.04 / Mint17.  Cleaning out gnome-panel
+#       settings, cinnamon 1.8(-) settings, etc.
+#   2015-07-29 rik: panel-launchers no longer a cinnamon key so removed (they
+#       are now stored in a .js file for the applet)
+#   2015-10-28 rik: adding Gnome-Shell reset processing
+#       - Refactoring dialogs to use zenity
+#   2015-11-05 rik: org.gnome.desktop and org.gnome.settings-daemon are not
+#       defined schemas, so changed to reset with "dconf reset" command.
+#       - adding dconf reset process for org.gnome.shell or else doesn't reset
+#         sub directories such as org.gnome.shell.extensions *
+#   2016-04-27 rik: adding Unity support
+#       - resetting based on detected sessions, not just active desktop
+#       - NOT restarting current session, instead just tell user to reboot
+#       - exit immediately if initiated as root user
+#   2016-07-27 rik: update unity / gnome reset logic
+#       - xfce: add initial xfce reset logic
+#       - cinnamon: add nemo bookmark restore
+#   2016-07-29 rik: cinnamon: explicitly resetting the schemas instead of
+#       relying on the rescursive reset of org.cinnamon: some sub-schemas
+#       weren't getting reset otherwise.
+#   2018-02-28 rik: updating ubuntu.session to reset gnome not unity
+#   2020-03-28 rik: re-working cinnamon --replace since it was not exiting
+#       properly
+#   2020-07-20 rik: restart gnome-shell with killall rather than replace command
+#
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Ensure script running as regular user
+# ------------------------------------------------------------------------------
+if [ $(id -u) -eq 0 ]
+then
+    echo "Wasta-Reset started as root user."
+    echo "No processing done.  Exiting...."
+    exit 0
+fi
+
+# ------------------------------------------------------------------------------
+# Initial Setup
+# ------------------------------------------------------------------------------
+
+# if 'auto' parameter passed, run non-interactively
+if [ "$1" == "auto" ];
+then
+    AUTO="auto"
+else
+    AUTO=""
+fi
+
+if ! [ "$AUTO" ];
+then
+    # prompt user
+    zenity --question --no-wrap --height=200 --width=450 \
+        --title="wasta [Reset]" \
+        --window-icon=/usr/share/icons/hicolor/scalable/apps/wasta-linux.svg \
+        --text="<b>This utility will RESET ALL
+your Desktop Interface Settings.</b>
+
+All of your settings will be restored
+to the Wasta-Linux defaults.
+
+<b><i>Do you want to RESET ALL your Desktop Settings?</i></b>"
+
+    if [ "$?" -ne 0 ];
+    then
+        # User didn't say yes: exit
+        exit 0
+    fi
+else
+    echo
+    echo " *** Script Entry: wasta-reset (auto mode)"
+    echo
+    MSG="Starting wasta [Reset]...\n\n"
+fi
+
+# ------------------------------------------------------------------------------
+# Processing based on detected sessions
+# ------------------------------------------------------------------------------
+
+if [ -e /usr/share/xsessions/cinnamon.desktop ];
+then
+    # Cinnamon Reset
+
+    # --------------------------------------------------------------------------
+    # Save keys needing to be restored later
+    # --------------------------------------------------------------------------
+    SAVE_FAVORITES=$(gsettings get org.cinnamon favorite-apps)
+    SAVE_WORK=$(gsettings get org.cinnamon number-workspaces)
+    SAVE_WORK_NAMES=$(gsettings get org.cinnamon workspace-name-overrides)
+    SAVE_BACKGROUND=$(gsettings get org.cinnamon.desktop.background picture-uri)
+    SAVE_BOOKMARK_BREAKPOINT=$(gsettings get \
+        org.nemo.window-state sidebar-bookmark-breakpoint)
+
+    # --------------------------------------------------------------------------
+    # Reset all Cinnamon and Nemo settings to defaults
+    # --------------------------------------------------------------------------
+    gsettings reset-recursively org.cinnamon
+    gsettings reset-recursively org.cinnamon.desktop.background
+    gsettings reset-recursively org.cinnamon.desktop.interface
+    gsettings reset-recursively org.cinnamon.desktop.lockdown
+    gsettings reset-recursively org.cinnamon.desktop.media-handling
+    gsettings reset-recursively org.cinnamon.desktop.screensaver
+    gsettings reset-recursively org.cinnamon.desktop.session
+    gsettings reset-recursively org.cinnamon.desktop.sound
+    gsettings reset-recursively org.cinnamon.muffin
+    gsettings reset-recursively org.cinnamon.settings-daemon.peripherals.touchpad
+    gsettings reset-recursively org.cinnamon.settings-daemon.plugins.media-keys
+    gsettings reset-recursively org.cinnamon.settings-daemon.plugins.power
+    gsettings reset-recursively org.cinnamon.sounds
+    gsettings reset-recursively org.cinnamon.theme
+    gsettings reset-recursively org.cinnamon.desktop.wm.preferences
+    gsettings reset-recursively org.nemo
+
+    # --------------------------------------------------------------------------
+    # Restore saved keys
+    # --------------------------------------------------------------------------
+    gsettings set org.cinnamon favorite-apps "$SAVE_FAVORITES"
+    gsettings set org.cinnamon number-workspaces "$SAVE_WORK"
+    gsettings set org.cinnamon workspace-name-overrides "$SAVE_WORK_NAMES"
+    gsettings set org.cinnamon.desktop.background picture-uri "$SAVE_BACKGROUND"
+    gsettings set org.nemo.window-state sidebar-bookmark-breakpoint \
+        "$SAVE_BOOKMARK_BREAKPOINT"
+
+    MSG+="User settings for <b>Cinnamon Desktop</b> reset.\n\n"
+fi
+
+if [ -e /usr/share/xsessions/ubuntu.desktop ] | \
+   [ -e /usr/share/xsessions/gnome.desktop ];
+then
+    # Unity and GNOME Reset
+
+    # --------------------------------------------------------------------------
+    # Save keys needing to be restored later
+    # --------------------------------------------------------------------------
+    SAVE_BACKGROUND=$(gsettings get org.gnome.desktop.background picture-uri)
+    SAVE_KEYBOARDS=$(gsettings get org.gnome.desktop.input-sources sources)
+    SAVE_GNOME_FAVORITES=$(gsettings get org.gnome.shell favorite-apps)
+
+    # --------------------------------------------------------------------------
+    # Reset all shared GNOME and Nautilus dconf settings to defaults
+    # --------------------------------------------------------------------------
+    gsettings reset-recursively org.gnome.nautilus
+    # schema not defined: gsettings reset-recursively org.gnome.desktop
+    dconf reset -f /org/gnome/desktop/
+    # schema not defined: gsettings reset-recursively org.gnome.settings-daemon
+    dconf reset -f /org/gnome/settings-daemon/
+
+    # not resetting org.gnome.shell.extensions.*:
+    # schema not defined: gsettings reset-recursively org.gnome.shell
+    dconf reset -f /org/gnome/shell/
+
+    # --------------------------------------------------------------------------
+    # Restore saved shared keys
+    # --------------------------------------------------------------------------
+    gsettings set org.gnome.desktop.background picture-uri "$SAVE_BACKGROUND"
+    gsettings set org.gnome.desktop.input-sources sources "$SAVE_KEYBOARDS"
+    gsettings set org.gnome.shell favorite-apps "$SAVE_GNOME_FAVORITES"
+
+    MSG+="User settings for <b>GNOME Desktop</b> reset.\n\n"
+fi
+
+if [ -e /usr/share/xsessions/xfce.desktop ]| \
+   [ -e /usr/share/xsessions/xubuntu.desktop ];
+then
+    # reset light-locker (xubuntu has it lock by default)
+    gsettings reset-recursively apps.light-locker
+
+    XFCE_ACTIVE=""
+    XFCE_ACTIVE=$(wmctrl -m | grep -i Xfwm4)
+    if [ "$XFCE_ACTIVE" ];
+    then
+        MSG+="<b>XFCE Active:</b> Restarting...\n\n"
+        xfce4-panel -q
+        sleep 1
+        killall xfconfd
+        sleep 1
+        rm -r /home/$USER/.config/xfce4/
+        sleep 1
+        xfce4-panel &
+        # dockbarx won't be reset, but since default doesn't use it, no prob
+        # NOTE: COULD call wasta-xfce-layout default yes here but I don't
+        #   think needed and may complicate things
+    else
+        rm -r /home/$USER/.config/xfce4/
+    fi
+
+    MSG+="User settings for <b>XFCE Desktop</b> reset.\n\n"
+fi
+
+# ------------------------------------------------------------------------------
+# Restart current session
+# ------------------------------------------------------------------------------
+sleep 2
+
+# Check if MUFFIN window manager is active (Cinnamon)
+CINNAMON_ACTIVE=""
+CINNAMON_ACTIVE=$(wmctrl -m | grep -i Muffin)
+if [ "$CINNAMON_ACTIVE" ];
+then
+    MSG+="<b>Cinnamon Active:</b> Restarting...\n\n"
+    nohup >/dev/null 2>&1 cinnamon --replace & >/dev/null 2>&1
+fi
+
+# Check if GNOME window manager is active
+# check what Ubuntu session gives
+GNOME_ACTIVE=""
+GNOME_ACTIVE=$(wmctrl -m | grep -i GNOME)
+if [ "$GNOME_ACTIVE" ];
+then
+    MSG+="<b>GNOME Active:</b> Restarting...\n\n"
+    killall -SIGQUIT gnome-shell
+    # nohup >/dev/null 2>&1 gnome-shell --replace & >/dev/null 2>&1
+fi
+
+# ------------------------------------------------------------------------------
+# Finished
+# ------------------------------------------------------------------------------
+
+MSG+="<b>Finished Processing:</b> You will need
+to restart to see the changes."
+
+if ! [ "$AUTO" ];
+then
+    # prompt user
+    sleep 2
+    zenity --info --title "wasta [Reset]: Finished" --no-wrap --height=150 --width=450 \
+        --window-icon=/usr/share/icons/hicolor/scalable/apps/wasta-linux.svg \
+        --text="$MSG"
+else
+    echo
+    echo " *** Script Exit: wasta-reset (auto mode)"
+    echo
+fi
+
+exit 0

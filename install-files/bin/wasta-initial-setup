@@ -229,6 +229,16 @@ then
     exit 1
 fi
 
+echo
+echo "*** Enabling 'KillUserProcesses' to ensure wasta-logout runs on logout"
+echo
+
+# lightdm does NOT close user sessions on logout, meaning wasta-logout and
+# other systemd items expecting the session to close are not running
+# correctly. Setting "KillUserProcesses=yes" in logind config works around
+# this.
+sed -i -e "s@.*\(KillUserProcesses\).*@\1=yes@" /etc/systemd/logind.conf
+
 # ------------------------------------------------------------------------------
 # Finished
 # ------------------------------------------------------------------------------

@@ -12,6 +12,10 @@
 # 2021-09-27 rik: updating skype-2021.gpg key install, adding wasta
 #   libreoffice 7.1 ppa.
 #   - added neofetch, uptimed
+# 2022-03-08 rik: added LO 7.2 PPA
+# 2022-03-11 rik: adding traffic-cop (replaces tt-bandwidth-manager)
+# 2022-03-24 rik: adding mkisofs since this version (from cdrtools) allows
+#   making ISOs > 4GB in size.
 #
 # ==============================================================================
 
@@ -138,28 +142,27 @@ apt-key add $DIR/keys/libreoffice-ppa.gpg > /dev/null 2>&1
 apt-key add $DIR/keys/keymanapp-ppa.gpg > /dev/null 2>&1
 apt-key add $DIR/keys/skype-2021.gpg > /dev/null 2>&1
 
-# add LibreOffice 7.1 PPA
-if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-1-$SERIES.list ];
+# add LibreOffice 7.2 PPA
+if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list ];
 then
     echo
-    echo "*** Adding LibreOffice 7.1 PPA"
+    echo "*** Adding LibreOffice 7.2 PPA"
     echo
-    echo "deb http://ppa.launchpad.net/wasta-linux/libreoffice-7-1/ubuntu $SERIES main" | \
-        tee $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-1-$SERIES.list
-    echo "# deb-src http://ppa.launchpad.net/wasta-linux/libreoffice-7-1/ubuntu $SERIES main" | \
-        tee -a $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-1-$SERIES.list
+    echo "deb http://ppa.launchpad.net/wasta-linux/libreoffice-7-2/ubuntu $SERIES main" | \
+        tee $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
+    echo "# deb-src http://ppa.launchpad.net/wasta-linux/libreoffice-7-2/ubuntu $SERIES main" | \
+        tee -a $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
 else
     # found, but ensure LibreOffice PPA ACTIVE (user could have accidentally disabled)
     # DO NOT match any lines ending in #wasta
     sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpad.net\)@\1@' \
-       $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-1-$SERIES.list
+       $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
 fi
 
 #echo
 #echo "*** Removing Older LibreOffice PPAs"
 #echo
-#rm -f $APT_SOURCES_D/libreoffice-ubuntu-libreoffice-6-0*
-#rm -f $APT_SOURCES_D/libreoffice-ubuntu-libreoffice-6-1*
+rm -f $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-1*
 
 # Add Skype repository
 if ! [ -e $APT_SOURCES_D/skype-stable.list ];
@@ -199,11 +202,11 @@ fi
 
 apt-get update
 
-    LASTERRORLEVEL=$?
-    if [ "$LASTERRORLEVEL" -ne "0" ];
-    then
-        aptError
-    fi
+LASTERRORLEVEL=$?
+if [ "$LASTERRORLEVEL" -ne "0" ];
+then
+    aptError
+fi
 
 # ------------------------------------------------------------------------------
 # Upgrade ALL
@@ -215,11 +218,11 @@ echo
 
 $DEBIAN_NONINERACTIVE apt-get $YES dist-upgrade
 
-    LASTERRORLEVEL=$?
-    if [ "$LASTERRORLEVEL" -ne "0" ];
-    then
-        aptError
-    fi
+LASTERRORLEVEL=$?
+if [ "$LASTERRORLEVEL" -ne "0" ];
+then
+    aptError
+fi
 
 # ------------------------------------------------------------------------------
 # Standard package installs for all systems
@@ -291,6 +294,9 @@ echo
 # libtext-pdf-perl: provides pdfbklt (make A5 booklet from pdf)
 # meld: graphical text file compare utility
 # mintinstall: allows seeing packages from external repos (ppas, sil)
+# mkisofs: teminal - this version (from cdrtools source package) allows ISOs
+#   > 4GB in size. Alternative version from main repos (genisoimage package)
+#   does NOT allow this. Included in the wasta-applications ppa
 # mkusb-nox: teminal usb creator (15.10 issue with usb-creator-gtk)
 # modem-manager-gui: Check balance, top up, check signal strength, etc.
 # mtp-tools: media-transfer-protocol tools: needed for smartphones
@@ -321,7 +327,7 @@ echo
 # tldr: terminal - gives 'tldr' summary of manpages
 # tlp: laptop power savings
 # traceroute: terminal
-# tt-bandwidth-manager-gui: graphical frontend to limit bandwidth per app
+# traffic-cop: graphical frontend to limit bandwidth per app
 # ttf-mscorefonts-installer: installs standard Microsoft fonts
 # ubiquity-frontend-gtk: add here so not needed to be downloaded by
 #   wasta-remastersys or if needs to be updated by app-adjustments.sh
@@ -416,6 +422,7 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     libtext-pdf-perl \
     meld \
     mintinstall \
+    mkisofs \
     mkusb-nox \
     modem-manager-gui \
     mtp-tools \
@@ -445,7 +452,7 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     tldr \
     tlp \
     traceroute \
-    tt-bandwidth-manager-gui \
+    traffic-cop \
     ttf-mscorefonts-installer \
     ubiquity-frontend-gtk ubiquity-slideshow-wasta \
     ubuntu-restricted-extras \
@@ -467,11 +474,11 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     zim \
     "
 
-    LASTERRORLEVEL=$?
-    if [ "$LASTERRORLEVEL" -ne "0" ];
-    then
-        aptError
-    fi
+LASTERRORLEVEL=$?
+if [ "$LASTERRORLEVEL" -ne "0" ];
+then
+    aptError
+fi
 
 # ------------------------------------------------------------------------------
 # Language Support Files: install

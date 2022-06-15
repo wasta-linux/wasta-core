@@ -1,3 +1,9 @@
+wasta-core (22.04.0.4) jammy; urgency=medium
+
+  * correct gpg key installs, firefox setup
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Wed, 15 Jun 2022 15:51:41 -0500
+
 wasta-core (22.04.0.3) jammy; urgency=medium
 
   * app-installs: adding mkisofs (this version from cdrtools

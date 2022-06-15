@@ -133,36 +133,27 @@ then
     cp $APT_SOURCES $APT_SOURCES.save
 fi
 
-# Manually add repo keys:
-#   - apt-key no longer supported in scripts so need to use gpg directly.
-#       - Still works 18.04 but warning it may break in the future: however
-#         the direct gpg calls were problematic so keeping same for bionic.
-#   - sending output to null to not scare users
-apt-key add $DIR/keys/libreoffice-ppa.gpg > /dev/null 2>&1
-apt-key add $DIR/keys/keymanapp-ppa.gpg > /dev/null 2>&1
-apt-key add $DIR/keys/skype-2021.gpg > /dev/null 2>&1
-
 # add LibreOffice 7.2 PPA
-if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list ];
-then
-    echo
-    echo "*** Adding LibreOffice 7.2 PPA"
-    echo
-    echo "deb http://ppa.launchpad.net/wasta-linux/libreoffice-7-2/ubuntu $SERIES main" | \
-        tee $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
-    echo "# deb-src http://ppa.launchpad.net/wasta-linux/libreoffice-7-2/ubuntu $SERIES main" | \
-        tee -a $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
-else
-    # found, but ensure LibreOffice PPA ACTIVE (user could have accidentally disabled)
-    # DO NOT match any lines ending in #wasta
-    sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpad.net\)@\1@' \
-       $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
-fi
+#if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list ];
+#then
+#    echo
+#    echo "*** Adding LibreOffice 7.2 PPA"
+#    echo
+#    echo "deb http://ppa.launchpadcontent.net/wasta-linux/libreoffice-7-2/ubuntu $SERIES main" | \
+#        tee $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
+#    echo "# deb-src http://ppa.launchpadcontent.net/wasta-linux/libreoffice-7-2/ubuntu $SERIES main" | \
+#        tee -a $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
+#else
+#    # found, but ensure LibreOffice PPA ACTIVE (user could have accidentally disabled)
+#    # DO NOT match any lines ending in #wasta
+#    sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpadcontent.net\)@\1@' \
+#       $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
+#fi
 
 #echo
 #echo "*** Removing Older LibreOffice PPAs"
 #echo
-rm -f $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-1*
+#rm -f $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-1*
 
 # Add Skype repository
 if ! [ -e $APT_SOURCES_D/skype-stable.list ];
@@ -181,24 +172,16 @@ then
     echo
     echo "*** Adding Keyman PPA"
     echo
-    echo "deb http://ppa.launchpad.net/keymanapp/keyman/ubuntu $SERIES main" | \
+    echo "deb http://ppa.launchpadcontent.net/keymanapp/keyman/ubuntu $SERIES main" | \
         tee $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list
-    echo "# deb-src http://ppa.launchpad.net/keymanapp/keyman/ubuntu $SERIES main" | \
+    echo "# deb-src http://ppa.launchpadcontent.net/keymanapp/keyman/ubuntu $SERIES main" | \
         tee -a $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list
  else
      # found, but ensure Keyman PPA ACTIVE (user could have accidentally disabled)
      # DO NOT match any lines ending in #wasta
-     sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpad.net\)@\1@' \
+     sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpadcontent.net\)@\1@' \
         $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list
 fi
-
-# 2017-11-29 rik: NOTE: pfsense caching will NOT work with this no-cache option
-#   set to True.  So disabling for bionic for now until get more input from
-#   other users (but Ethiopia for example will want this set to False)
-#if ! [ -e /etc/apt/apt.conf.d/99nocache ];
-#then
-#    echo 'Acquire::http::No-Cache "True";' > /etc/apt/apt.conf.d/99nocache
-#fi
 
 apt-get update
 
@@ -252,6 +235,7 @@ echo
 # easytag: GUI ID3 tag editor
 # exfat-fuse, exfat-utils: compatibility for exfat formatted disks
 # extundelete: terminal - restore deleted files
+# firefox-esr: 22.04+ we default to this over the snap version
 # flatpak
 # font-manager: GUI for managing fonts
 # fonts-crosextra-caladea: metrically compatible with "Cambria"

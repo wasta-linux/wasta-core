@@ -88,27 +88,9 @@ sed -i -e '/#wasta$/! s@.*\(deb .*ubuntu.com/ubuntu.* '$SERIES' \)@\1@' $APT_SOU
 sed -i -e '/#wasta$/! s@.*\(deb .*ubuntu.com/ubuntu.* '$SERIES'-updates \)@\1@' $APT_SOURCES
 sed -i -e '/#wasta$/! s@.*\(deb .*ubuntu.com/ubuntu.* '$SERIES'-security \)@\1@' $APT_SOURCES
 
-# canonical.com lists include "partner" for things like skype, etc.
+# canonical.com lists include "partner" for a few additional package options
 # DO NOT match any lines ending in #wasta
 sed -i -e '/#wasta$/! s@.*\(deb .*canonical.com/ubuntu.* '$SERIES' \)@\1@' $APT_SOURCES
-
-# legacy cleanup: PSO should NOT be in sources.list anymore (ubiquity will
-#   remove when installing)
-#sed -i -e '\@http://packages.sil.org/ubuntu@d' $APT_SOURCES
-
-# install repository Keys (done locally since wasta-offline could be active)
-echo
-echo "*** Adding Repository GPG Keys"
-echo
-
-# Manually add repo keys:
-#   - apt-key no longer supported in scripts so need to use gpg directly.
-#       - Still works 18.04 but warning it may break in the future: however
-#         the direct gpg calls were problematic so keeping same for bionic.
-#   - sending output to null to not scare users
-apt-key add $DIR/keys/sil-2016.gpg > /dev/null 2>&1
-apt-key add $DIR/keys/wasta-linux-ppa.gpg > /dev/null 2>&1
-apt-key add $DIR/keys/skype-2021.gpg > /dev/null 2>&1
 
 # add SIL repository
 if ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES.list ];
@@ -148,14 +130,14 @@ then
     echo "*** Adding Wasta-Linux PPA"
     echo
 
-    echo "deb http://ppa.launchpad.net/wasta-linux/wasta/ubuntu $SERIES main" | \
+    echo "deb http://ppa.launchpadcontent.net/wasta-linux/wasta/ubuntu $SERIES main" | \
         tee $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list
-    echo "# deb-src http://ppa.launchpad.net/wasta-linux/wasta/ubuntu $SERIES main" | \
+    echo "# deb-src http://ppa.launchpadcontent.net/wasta-linux/wasta/ubuntu $SERIES main" | \
         tee -a $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list
 else
     # found, but ensure Wasta-Linux PPA ACTIVE (user could have accidentally disabled)
     # DO NOT match any lines ending in #wasta
-    sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpad.net\)@\1@' \
+    sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpadcontent.net\)@\1@' \
         $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list
 fi
 
@@ -166,15 +148,33 @@ then
     echo "*** Adding Wasta-Linux Apps PPA"
     echo
 
-    echo "deb http://ppa.launchpad.net/wasta-linux/wasta-apps/ubuntu $SERIES main" | \
+    echo "deb http://ppa.launchpadcontent.net/wasta-linux/wasta-apps/ubuntu $SERIES main" | \
         tee $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list
-    echo "# deb-src http://ppa.launchpad.net/wasta-linux/wasta-apps/ubuntu $SERIES main" | \
+    echo "# deb-src http://ppa.launchpadcontent.net/wasta-linux/wasta-apps/ubuntu $SERIES main" | \
         tee -a $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list
 else
     # found, but ensure Wasta-Apps PPA ACTIVE (user could have accidentally disabled)
     # DO NOT match any lines ending in #wasta
-    sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpad.net\)@\1@' \
+    sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpadcontent.net\)@\1@' \
         $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list
+fi
+
+# add Mozilla Team PPA
+if ! [ -e $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list ];
+then
+    echo
+    echo "*** Adding Mozilla Team PPA"
+    echo
+
+    echo "deb http://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu $SERIES main" | \
+        tee $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list
+    echo "# deb-src http://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu $SERIES main" | \
+        tee -a $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list
+else
+    # found, but ensure Mozilla Team PPA ACTIVE (user could have accidentally disabled)
+    # DO NOT match any lines ending in #wasta
+    sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpadcontent.net\)@\1@' \
+        $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list
 fi
 
 # IF Wasta-Testing PPA found, remove (do NOT want users having this, also

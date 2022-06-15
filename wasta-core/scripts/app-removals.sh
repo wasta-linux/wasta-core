@@ -66,6 +66,7 @@ echo
 # dkms: if installed then ubiquity will fail when installing shim-signed
 #   because will need interaction to setup secureboot keys
 # empathy: chat client
+# firefox: we now default to firefox-esr (deb not snap)
 # fonts-noto-cjk: conflicts with font-manager: newer font-manager from ppa
 #   handles it, but it is too different to use
 # fonts-*: non-english fonts
@@ -87,7 +88,6 @@ echo
 pkgToRemoveListFull="\
     blueman \
     deja-dup \
-    dkms \
     empathy-common \
     fonts-beng* \
         fonts-deva* \
@@ -152,10 +152,44 @@ done
 apt-get $YES purge $pkgToRemoveList
 
 # ------------------------------------------------------------------------------
+# separately remove 'firefox' since some users may want to keep
+# ------------------------------------------------------------------------------
+
+pkgToRemoveListFull="firefox"
+pkgToRemoveList=""
+for pkgToRemove in $(echo $pkgToRemoveListFull); do
+  $(dpkg --status $pkgToRemove &> /dev/null)
+  # errno:0 = exists. errno:1 = not exists. errno:2 = invalid name (eg: with *)
+  errno=$?
+  if [[ $errno -eq 0 ]] || [[ $errno -eq 2 ]]; then
+    pkgToRemoveList="$pkgToRemoveList $pkgToRemove"
+  fi
+done
+
+apt-get $YES purge $pkgToRemoveList
+
+# ------------------------------------------------------------------------------
 # separately remove 'snapd' since some users may want to keep
 # ------------------------------------------------------------------------------
 
 pkgToRemoveListFull="snapd"
+pkgToRemoveList=""
+for pkgToRemove in $(echo $pkgToRemoveListFull); do
+  $(dpkg --status $pkgToRemove &> /dev/null)
+  # errno:0 = exists. errno:1 = not exists. errno:2 = invalid name (eg: with *)
+  errno=$?
+  if [[ $errno -eq 0 ]] || [[ $errno -eq 2 ]]; then
+    pkgToRemoveList="$pkgToRemoveList $pkgToRemove"
+  fi
+done
+
+apt-get $YES purge $pkgToRemoveList
+
+# ------------------------------------------------------------------------------
+# separately remove 'dkms' since some users may want to keep
+# ------------------------------------------------------------------------------
+
+pkgToRemoveListFull="dkms"
 pkgToRemoveList=""
 for pkgToRemove in $(echo $pkgToRemoveListFull); do
   $(dpkg --status $pkgToRemove &> /dev/null)

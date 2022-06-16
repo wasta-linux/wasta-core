@@ -77,6 +77,7 @@ echo
 # mpv: media player - not sure how this got installed
 # totem: not needed as vlc handles all video/audio
 # transmission: normal users doing torrents probably isn't preferred
+# unity-greeter: lightdm theme causing issues overriding slick-greeter
 # unity-webapps-common: amazon shopping lens, etc.
 # webbrowser-app: ubuntu web browser brought in by unity-tweak-tool
 # whoopsie: ubuntu crash report system but hangs shutdown
@@ -135,6 +136,7 @@ pkgToRemoveListFull="\
         totem-common \
         totem-plugins \
     transmission transmission-common \
+    unity-greeter \
     unity-webapps-common \
     webbrowser-app \
     whoopsie"

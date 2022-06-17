@@ -216,7 +216,7 @@ echo "*** Standard Installs"
 echo
 
 # aisleriot: solitare game
-# android-tools-adb: terminal - communicate to Android devices
+# adb: terminal - communicate to Android devices
 # apt-rdepends: reverse dependency lookup
 # audacity lame: audio editing
 # bloom-desktop art-of-reading3: sil bloom N/A for 22.04
@@ -235,6 +235,7 @@ echo
 # exfat-fuse: compatibility for exfat formatted disks
 # extundelete: terminal - restore deleted files
 # firefox-esr: 22.04+ we default to this over the snap version
+#	webext-ublock-origin-firefox: ublock origin for firefox
 # flatpak
 # font-manager: GUI for managing fonts
 # fonts-crosextra-caladea: metrically compatible with "Cambria"
@@ -325,7 +326,7 @@ echo
 # wasta-papirus papirus-icon-theme: more 'modern' icon theme
 # wasta-remastersys: create ISO of system
 # wasta-resources-core: wasta-core documentation and resources
-# wavemon: terminal - for wireless network diagonstics
+# wavemon: terminal - for wirelesssudo su network diagonstics
 # xmlstarlet: terminal - reading / writing to xml files
 # xsltproc: terminal - xslt, xml conversion program
 # youtube-dl: terminal - youtube / video downloads
@@ -333,7 +334,7 @@ echo
 
 $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     aisleriot \
-    android-tools-adb \
+    adb \
     apt-rdepends \
     audacity lame \
     bookletimposer \
@@ -350,6 +351,8 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     easytag \
     exfat-fuse \
     extundelete \
+    firefox-exr \
+    	webext-ublock-origin-firefox \
     flatpak \
     font-manager \
     fonts-crosextra-caladea \

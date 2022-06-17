@@ -215,12 +215,11 @@ echo
 echo "*** Standard Installs"
 echo
 
-# adobe-flashplugin: flash
 # aisleriot: solitare game
 # android-tools-adb: terminal - communicate to Android devices
 # apt-rdepends: reverse dependency lookup
 # audacity lame: audio editing
-# bloom-desktop art-of-reading3: sil bloom
+# bloom-desktop art-of-reading3: sil bloom N/A for 22.04
 # bookletimposer: pdf booklet / imposition tool
 # brasero: CD/DVD burner
 # calibre: e-book reader, utility
@@ -233,7 +232,7 @@ echo
 # diodon: clipboard manager
 # dos2unix: terminal - convert line endings of files to / from windows to unix
 # easytag: GUI ID3 tag editor
-# exfat-fuse, exfat-utils: compatibility for exfat formatted disks
+# exfat-fuse: compatibility for exfat formatted disks
 # extundelete: terminal - restore deleted files
 # firefox-esr: 22.04+ we default to this over the snap version
 # flatpak
@@ -260,7 +259,7 @@ echo
 # gucharmap: gnome character map (traditional)
 # gufw: GUI for "uncomplicated firewall"
 # hardinfo: system profiler
-# hddtemp: terminal - harddrive temp checker
+# hddtemp: terminal - harddrive temp checker N/A 22.04
 # hfsprogs: for apple hfs compatiblity
 # htop: process browser
 # httrack: website download utility
@@ -271,7 +270,6 @@ echo
 # keepassxc: password manager (xc is the community port that is more up to date)
 # keyman: keyman keyboard app
 # klavaro: typing tutor
-# kmfl-keyboard-ipa: ipa keyboard for kmfl
 # libdvd-pkg: enables DVD playback (downloads and installs libdvdcss2)
 # libreoffice: install the full meta-package
 # libreoffice-sdbc-hsqldb: (pre-firebird) db backend for LO base
@@ -281,7 +279,6 @@ echo
 # mkisofs: teminal - this version (from cdrtools source package) allows ISOs
 #   > 4GB in size. Alternative version from main repos (genisoimage package)
 #   does NOT allow this. Included in the wasta-applications ppa
-# mkusb-nox: teminal usb creator (15.10 issue with usb-creator-gtk)
 # modem-manager-gui: Check balance, top up, check signal strength, etc.
 # mtp-tools: media-transfer-protocol tools: needed for smartphones
 # ncdu: terminal - ncurses disk usage analyzer tool
@@ -297,7 +294,7 @@ echo
 # shotcut: video editor
 # shotwell: photo editor / manager (can edit single files easily)
 # shutter: GUI - powerful screenshot tool
-# silcc: terminal - SIL consistent changes
+# silcc: terminal - SIL consistent changes  N/A 22.04
 # simplescreenrecorder: screen recorder
 # soundconverter: convert audio formats
 # sound-juicer: rip CDs
@@ -335,12 +332,10 @@ echo
 # zim: wiki style note taking app
 
 $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
-    adobe-flashplugin \
     aisleriot \
     android-tools-adb \
     apt-rdepends \
     audacity lame \
-    bloom-desktop art-of-reading3 \
     bookletimposer \
     brasero \
     calibre \
@@ -353,7 +348,7 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     diodon \
     dos2unix \
     easytag \
-    exfat-fuse exfat-utils \
+    exfat-fuse \
     extundelete \
     flatpak \
     font-manager \
@@ -388,7 +383,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     gucharmap \
     gufw \
     hardinfo \
-    hddtemp \
     hfsprogs \
     htop \
     httrack \
@@ -399,7 +393,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     keepassxc \
     keyman \
     klavaro \
-    kmfl-keyboard-ipa \
     libdvd-pkg \
     libreoffice \
         libreoffice-sdbc-hsqldb \
@@ -407,7 +400,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     meld \
     mintinstall \
     mkisofs \
-    mkusb-nox \
     modem-manager-gui \
     mtp-tools \
     ncdu \
@@ -423,7 +415,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     shotcut \
     shotwell \
     shutter \
-    silcc \
     simplescreenrecorder \
     soundconverter \
     sound-juicer \

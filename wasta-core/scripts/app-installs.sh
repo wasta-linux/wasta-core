@@ -351,7 +351,7 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     easytag \
     exfat-fuse \
     extundelete \
-    firefox-exr \
+    firefox-esr \
     	webext-ublock-origin-firefox \
     flatpak \
     font-manager \

@@ -105,8 +105,8 @@ then
         tee -a $APT_SOURCES_D/packages-sil-org-$SERIES.list
 else
     # found, but ensure PSO main ACTIVE (user could have accidentally disabled)
-    # DO NOT match any lines ending in #wasta
-    sed -i -e '/#wasta$/! s@.*\(deb http://packages.sil.org\)@\1@' \
+    # DO NOT match any lines ending in #wasta 
+    sed -i -e '/#wasta$/! s@.*\(deb http[s]*://packages.sil.org\)@\1@' \
         $APT_SOURCES_D/packages-sil-org-$SERIES.list
 fi
 
@@ -137,7 +137,7 @@ then
 else
     # found, but ensure Wasta-Linux PPA ACTIVE (user could have accidentally disabled)
     # DO NOT match any lines ending in #wasta
-    sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpadcontent.net\)@\1@' \
+    sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
         $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list
 fi
 
@@ -154,8 +154,8 @@ then
         tee -a $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list
 else
     # found, but ensure Wasta-Apps PPA ACTIVE (user could have accidentally disabled)
-    # DO NOT match any lines ending in #wasta
-    sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpadcontent.net\)@\1@' \
+    # DO NOT match any lines ending in #wasta   
+    sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
         $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list
 fi
 
@@ -172,8 +172,8 @@ then
         tee -a $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list
 else
     # found, but ensure Mozilla Team PPA ACTIVE (user could have accidentally disabled)
-    # DO NOT match any lines ending in #wasta
-    sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpadcontent.net\)@\1@' \
+    # DO NOT match any lines ending in #wasta    
+    sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
         $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list
 fi
 
@@ -197,8 +197,8 @@ fi
 # preseed debconf with settings so user NOT prompted on package installs, etc.
 # ------------------------------------------------------------------------------
 # lightdm: set as display manager:
-echo "lightdm shared/default-x-display-manager select lightdm" \
-    | debconf-set-selections
+#echo "lightdm shared/default-x-display-manager select lightdm" \
+#    | debconf-set-selections
 
 # libdvd-pkg
 # don't think needed: libdvd-pkg libdvd-pkg/post-invoke_hook-remove boolean false

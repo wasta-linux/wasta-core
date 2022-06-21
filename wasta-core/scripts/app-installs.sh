@@ -146,7 +146,7 @@ fi
 #else
 #    # found, but ensure LibreOffice PPA ACTIVE (user could have accidentally disabled)
 #    # DO NOT match any lines ending in #wasta
-#    sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpadcontent.net\)@\1@' \
+#    sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
 #       $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
 #fi
 
@@ -179,7 +179,7 @@ then
  else
      # found, but ensure Keyman PPA ACTIVE (user could have accidentally disabled)
      # DO NOT match any lines ending in #wasta
-     sed -i -e '/#wasta$/! s@.*\(deb http://ppa.launchpadcontent.net\)@\1@' \
+     sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
         $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list
 fi
 

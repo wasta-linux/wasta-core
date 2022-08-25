@@ -2,13 +2,6 @@
 
 # ==============================================================================
 # wasta-core: app-removals.sh
-#
-#   This script will remove apps deemed "unnecessary" for default users.
-#
-#   2019-11-24 rik: initial focal script
-#   2020-07-20 rik: separate out snapd and gnome-software removals so users
-#       could opt to NOT purge them
-#
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -59,19 +52,13 @@ echo
 echo "*** Removing Unwanted Applications"
 echo
 
-# blueman: not sure why cinnamon has this listed as a 'recommends'
-# checkbox-common:
-#   - but removing it will remove ubuntu-desktop so not removing
 # deja-dup: we use wasta-backup
-# dkms: if installed then ubiquity will fail when installing shim-signed
-#   because will need interaction to setup secureboot keys
 # empathy: chat client
 # firefox: we now default to firefox-esr (deb not snap)
 # fonts-noto-cjk: conflicts with font-manager: newer font-manager from ppa
 #   handles it, but it is too different to use
 # fonts-*: non-english fonts
 #   ttf-* fonts: non-english font families
-# gnome-software: high RAM and CPU use, doesn't display SIL / Wasta apps
 # gnome-sushi:confusing for some
 # landscape-client-ui-install: pay service only for big corporations
 # mpv: media player - not sure how this got installed
@@ -87,7 +74,6 @@ echo
 #   will error and not remove anything.  So instead found this way to do it:
 #       http://superuser.com/questions/518859/ignore-packages-that-are-not-currently-installed-when-using-apt-get-remove
 pkgToRemoveListFull="\
-    blueman \
     deja-dup \
     empathy-common \
     fonts-beng* \
@@ -154,61 +140,19 @@ done
 apt-get $YES purge $pkgToRemoveList
 
 # ------------------------------------------------------------------------------
-# separately remove 'firefox' since some users may want to keep
+# separately remove snaps since some users may want to keep
 # ------------------------------------------------------------------------------
 
-pkgToRemoveListFull="firefox"
-pkgToRemoveList=""
-for pkgToRemove in $(echo $pkgToRemoveListFull); do
-  $(dpkg --status $pkgToRemove &> /dev/null)
-  # errno:0 = exists. errno:1 = not exists. errno:2 = invalid name (eg: with *)
-  errno=$?
-  if [[ $errno -eq 0 ]] || [[ $errno -eq 2 ]]; then
-    pkgToRemoveList="$pkgToRemoveList $pkgToRemove"
-  fi
-done
-
-apt-get $YES purge $pkgToRemoveList
-
-# ------------------------------------------------------------------------------
-# separately remove 'snapd' since some users may want to keep
-# ------------------------------------------------------------------------------
-
-pkgToRemoveListFull="snapd"
-pkgToRemoveList=""
-for pkgToRemove in $(echo $pkgToRemoveListFull); do
-  $(dpkg --status $pkgToRemove &> /dev/null)
-  # errno:0 = exists. errno:1 = not exists. errno:2 = invalid name (eg: with *)
-  errno=$?
-  if [[ $errno -eq 0 ]] || [[ $errno -eq 2 ]]; then
-    pkgToRemoveList="$pkgToRemoveList $pkgToRemove"
-  fi
-done
-
-apt-get $YES purge $pkgToRemoveList
+snap remove --purge firefox
+snap remove --purge snap-store
 
 # ------------------------------------------------------------------------------
 # separately remove 'dkms' since some users may want to keep
 # ------------------------------------------------------------------------------
+# dkms: if installed then ubiquity will fail when installing shim-signed
+#   because will need interaction to setup secureboot keys
 
 pkgToRemoveListFull="dkms"
-pkgToRemoveList=""
-for pkgToRemove in $(echo $pkgToRemoveListFull); do
-  $(dpkg --status $pkgToRemove &> /dev/null)
-  # errno:0 = exists. errno:1 = not exists. errno:2 = invalid name (eg: with *)
-  errno=$?
-  if [[ $errno -eq 0 ]] || [[ $errno -eq 2 ]]; then
-    pkgToRemoveList="$pkgToRemoveList $pkgToRemove"
-  fi
-done
-
-apt-get $YES purge $pkgToRemoveList
-
-# ------------------------------------------------------------------------------
-# separately remove 'gnome-software' since some users may want to keep
-# ------------------------------------------------------------------------------
-
-pkgToRemoveListFull="gnome-software"
 pkgToRemoveList=""
 for pkgToRemove in $(echo $pkgToRemoveListFull); do
   $(dpkg --status $pkgToRemove &> /dev/null)
@@ -225,10 +169,10 @@ apt-get $YES purge $pkgToRemoveList
 # cleanup dangling folders
 # ------------------------------------------------------------------------------
 # some removals do not clean up after themselves
-if [ ! -x /usr/bin/blueman-manager ];
-then
-    rm -rf /var/lib/blueman
-fi
+#if [ ! -x /usr/bin/blueman-manager ];
+#then
+#    rm -rf /var/lib/blueman
+#fi
 
 if [ ! -x /usr/bin/whoopsie ];
 then

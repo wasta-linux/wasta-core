@@ -1,3 +1,9 @@
+wasta-core (22.04.1.0) jammy; urgency=medium
+
+  * minor adjustments to app-installs, app-removals for .1 release
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Thu, 25 Aug 2022 11:22:34 -0500
+
 wasta-core (22.04.0.10) jammy; urgency=medium
 
   * postinst, app-installs: account for optional https in PPAs

@@ -2,21 +2,6 @@
 
 # ==============================================================================
 # wasta-core: app-installs.sh
-#
-# 2019-11-24 rik: initial focal script
-# 2020-01-24 rik: temporarily removing bloom, removing duplicate entry of
-#   python-appindicator
-# 2020-02-01 rik: removing nautilus-compare, commenting out keyman ppa logic
-#   - removing ice: it pulls in chromium-browser which is only a snap.
-# 2020-07-20 rik: add calibre
-# 2021-09-27 rik: updating skype-2021.gpg key install, adding wasta
-#   libreoffice 7.1 ppa.
-#   - added neofetch, uptimed
-# 2022-03-08 rik: added LO 7.2 PPA
-# 2022-03-11 rik: adding traffic-cop (replaces tt-bandwidth-manager)
-# 2022-03-24 rik: adding mkisofs since this version (from cdrtools) allows
-#   making ISOs > 4GB in size.
-#
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -235,7 +220,7 @@ echo
 # exfat-fuse: compatibility for exfat formatted disks
 # extundelete: terminal - restore deleted files
 # firefox-esr: 22.04+ we default to this over the snap version
-#	webext-ublock-origin-firefox: ublock origin for firefox
+#   webext-ublock-origin-firefox: ublock origin for firefox
 # flatpak
 # font-manager: GUI for managing fonts
 # fonts-crosextra-caladea: metrically compatible with "Cambria"
@@ -254,6 +239,10 @@ echo
 # gnome-maps: GUI map viewer
 # gnome-nettool: network tool GUI (traceroute, lookup, etc)
 # gnome-screenshot: GUI
+# gnome-software: GUI allows deb, flatpak, snap integration (no PPA or 3rd party
+#   deb repos however)
+#   gnome-software-plugin-flatpak
+#   gnome-software-plugin-snap
 # gnome-system-monitor: GUI
 # gparted: GUI partition manager
 # grsync: GUI rsync tool
@@ -276,7 +265,6 @@ echo
 # libreoffice-sdbc-hsqldb: (pre-firebird) db backend for LO base
 # libtext-pdf-perl: provides pdfbklt (make A5 booklet from pdf)
 # meld: graphical text file compare utility
-# mintinstall: allows seeing packages from external repos (ppas, sil)
 # mkisofs: teminal - this version (from cdrtools source package) allows ISOs
 #   > 4GB in size. Alternative version from main repos (genisoimage package)
 #   does NOT allow this. Included in the wasta-applications ppa
@@ -301,7 +289,7 @@ echo
 # sound-juicer: rip CDs
 # ssh: terminal - remote access
 # synaptic: more advanced package manager
-#   - apt-xapian-index: for synaptic indexing
+#   apt-xapian-index: for synaptic indexing
 # sysstat: terminal - provides sar: system activity reporter
 # teckit: terminal - SIL teckit
 # testdisk: terminal - photorec tool for recovery of deleted files
@@ -327,6 +315,7 @@ echo
 # wasta-remastersys: create ISO of system
 # wasta-resources-core: wasta-core documentation and resources
 # wavemon: terminal - for wirelesssudo su network diagonstics
+# webp-pixbuf-loader: adds support for webp images (in eye-of-gnome etc)
 # xmlstarlet: terminal - reading / writing to xml files
 # xsltproc: terminal - xslt, xml conversion program
 # youtube-dl: terminal - youtube / video downloads
@@ -352,7 +341,7 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     exfat-fuse \
     extundelete \
     firefox-esr \
-    	webext-ublock-origin-firefox \
+        webext-ublock-origin-firefox \
     flatpak \
     font-manager \
     fonts-crosextra-caladea \
@@ -380,6 +369,9 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     gnome-maps \
     gnome-nettool \
     gnome-screenshot \
+    gnome-software \
+        gnome-software-plugin-flatpak \
+        gnome-software-plugin-snap \
     gnome-system-monitor \
     gparted \
     grsync \
@@ -401,7 +393,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
         libreoffice-sdbc-hsqldb \
     libtext-pdf-perl \
     meld \
-    mintinstall \
     mkisofs \
     modem-manager-gui \
     mtp-tools \
@@ -446,6 +437,7 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     wasta-remastersys \
     wasta-resources-core \
     wavemon \
+    webp-pixbuf-loader \
     xmlstarlet \
     xsltproc \
     youtube-dl \

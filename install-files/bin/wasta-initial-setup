@@ -5,18 +5,6 @@
 #
 #   This script is run on a clean install of Ubuntu to 'wasta-ize' it.
 #
-#   2014-06-12 rik: initial script
-#   2014-12-21 rik: re-working to place in /usr/bin so found in path.
-#   2015-10-25 rik: re-working for Ubuntu 15.10
-#       - accounting for 'auto' input parameter: will then run
-#         non-interactively.
-#   2018-02-28 rik: calling wasta-reset with logged in user instead of root
-#       - calling app-adjustments.sh script (from wasta-multidesktop) if exists
-#   2019-02-23 rik: installing hwe stack
-#   2019-03-08 rik: setting redmond7 as wasta-layout system default
-#   2020-02-01 jcl: add zswap to kernel boot (compressed RAM buffer for swap)
-#   2020-10-02 rik: extracting zswap enable to separate script
-#
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -238,6 +226,25 @@ echo
 # correctly. Setting "KillUserProcesses=yes" in logind config works around
 # this.
 sed -i -e "s@.*\(KillUserProcesses\).*@\1=yes@" /etc/systemd/logind.conf
+
+echo
+echo "*** REMOVING HWE stack for 22.04.1"
+echo
+if ! [ "$AUTO" ];
+then
+    echo "Close this window if you do not want to remove the HWE stack."
+    echo
+    read -p "Press <Enter> to continue..."
+fi
+
+$DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
+    linux-generic"
+
+$DEBIAN_NONINERACTIVE bash -c "apt-get $YES purge \
+    linux-generic-hwe-22.04 \
+    linux-headers-generic-hwe-22.04 \
+    linux-image-generic-hwe-22.04"
+
 
 # ------------------------------------------------------------------------------
 # Finished

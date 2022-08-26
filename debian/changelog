@@ -1,3 +1,9 @@
+wasta-core (22.04.1.2) jammy; urgency=medium
+
+  * wasta-initial-setup: remove HWE kernel for 22.04.1
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Fri, 26 Aug 2022 16:48:06 -0500
+
 wasta-core (22.04.1.1) jammy; urgency=medium
 
   * cleanup of wasta-reset for 22.04

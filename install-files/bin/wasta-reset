@@ -5,51 +5,6 @@
 #
 # This script can be run at any time to "reset" Wasta-Linux defaults.
 #
-#   Gnome-Shell has no such reset facility.
-#
-#   Cinnamon does have a "Restore all settings to defaults" option, but
-#   then things like favorites and user background are lost.  Also, nemo not
-#   reset.  So, this script supercedes the Cinnamon "restore all settings",
-#   which was removed from the panel context menu.
-#
-#   2012-10-20 rik: Initial script - for Linux Mint 13 Maya Cinnamon
-#   2013-01-02 rik: Adjusted to be generic for any distro using Cinnamon DE.
-#       (so, can use for Ubuntu OR Mint)
-#   2013-06-19 rik: Updated for Cinnamon 1.8.x compatibility
-#   2013-06-28 rik: added "sleep" commands to help not crash Cinnamon on resets
-#       (best guess is that applying too many fixes too quickly may crash it,
-#        as all settings can be done individually from terminal w/o crashes)
-#   2013-10-25 rik: Updated for Cinnamon 2.0.x compatibility.  Refactored to
-#       take advantage of gschema.override setup (noted above).  Also, tracked
-#       down crashes to some key in wm.preferences location.  So, worked around
-#       that.  *shouldn't be crashing anymore on reset*???
-#   2013-12-02 rik: Minor documentation cleanup.
-#   2013-12-16 rik: Updating for Cinnamon 2.0 compatibility - background replace
-#   2014-05-23 rik: Updating for 14.04 / Mint17.  Cleaning out gnome-panel
-#       settings, cinnamon 1.8(-) settings, etc.
-#   2015-07-29 rik: panel-launchers no longer a cinnamon key so removed (they
-#       are now stored in a .js file for the applet)
-#   2015-10-28 rik: adding Gnome-Shell reset processing
-#       - Refactoring dialogs to use zenity
-#   2015-11-05 rik: org.gnome.desktop and org.gnome.settings-daemon are not
-#       defined schemas, so changed to reset with "dconf reset" command.
-#       - adding dconf reset process for org.gnome.shell or else doesn't reset
-#         sub directories such as org.gnome.shell.extensions *
-#   2016-04-27 rik: adding Unity support
-#       - resetting based on detected sessions, not just active desktop
-#       - NOT restarting current session, instead just tell user to reboot
-#       - exit immediately if initiated as root user
-#   2016-07-27 rik: update unity / gnome reset logic
-#       - xfce: add initial xfce reset logic
-#       - cinnamon: add nemo bookmark restore
-#   2016-07-29 rik: cinnamon: explicitly resetting the schemas instead of
-#       relying on the rescursive reset of org.cinnamon: some sub-schemas
-#       weren't getting reset otherwise.
-#   2018-02-28 rik: updating ubuntu.session to reset gnome not unity
-#   2020-03-28 rik: re-working cinnamon --replace since it was not exiting
-#       properly
-#   2020-07-20 rik: restart gnome-shell with killall rather than replace command
-#
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -120,23 +75,34 @@ then
 
     # --------------------------------------------------------------------------
     # Reset all Cinnamon and Nemo settings to defaults
+    #   - get list of schemas to reset by looking at gschema.override files
     # --------------------------------------------------------------------------
     gsettings reset-recursively org.cinnamon
     gsettings reset-recursively org.cinnamon.desktop.background
     gsettings reset-recursively org.cinnamon.desktop.interface
     gsettings reset-recursively org.cinnamon.desktop.lockdown
     gsettings reset-recursively org.cinnamon.desktop.media-handling
+    gsettings reset-recursively org.cinnamon.desktop.peripherals.mouse
+    gsettings reset-recursively org.cinnamon.desktop.peripherals.touchpad
+    gsettings reset-recursively org.cinnamon.desktop.privacy
     gsettings reset-recursively org.cinnamon.desktop.screensaver
     gsettings reset-recursively org.cinnamon.desktop.session
     gsettings reset-recursively org.cinnamon.desktop.sound
+    gsettings reset-recursively org.cinnamon.desktop.wm.preferences
     gsettings reset-recursively org.cinnamon.muffin
-    gsettings reset-recursively org.cinnamon.settings-daemon.peripherals.touchpad
     gsettings reset-recursively org.cinnamon.settings-daemon.plugins.media-keys
     gsettings reset-recursively org.cinnamon.settings-daemon.plugins.power
+    gsettings reset-recursively org.cinnamon.settings-daemon.plugins.xsettings
     gsettings reset-recursively org.cinnamon.sounds
     gsettings reset-recursively org.cinnamon.theme
-    gsettings reset-recursively org.cinnamon.desktop.wm.preferences
-    gsettings reset-recursively org.nemo
+
+    gsettings reset-recursively org.nemo.desktop
+    gsettings reset-recursively org.nemo.icon-view
+    gsettings reset-recursively org.nemo.preferences
+    gsettings reset-recursively org.nemo.preferences.menu-config
+    gsettings reset-recursively org.nemo.window-state
+
+    gsettings reset-recursively x.dm.slick-greeter
 
     # --------------------------------------------------------------------------
     # Restore saved keys
@@ -152,7 +118,8 @@ then
 fi
 
 if [ -e /usr/share/xsessions/ubuntu.desktop ] | \
-   [ -e /usr/share/xsessions/gnome.desktop ];
+   [ -e /usr/share/xsessions/gnome.desktop ] | \
+   [ -e /usr/share/xsessions/wasta-gnome.desktop ];
 then
     # Unity and GNOME Reset
 
@@ -186,58 +153,58 @@ then
     MSG+="User settings for <b>GNOME Desktop</b> reset.\n\n"
 fi
 
-if [ -e /usr/share/xsessions/xfce.desktop ]| \
-   [ -e /usr/share/xsessions/xubuntu.desktop ];
-then
-    # reset light-locker (xubuntu has it lock by default)
-    gsettings reset-recursively apps.light-locker
+# XFCE not supported in 22.04
+#
+#if [ -e /usr/share/xsessions/xfce.desktop ]| \
+#   [ -e /usr/share/xsessions/xubuntu.desktop ];
+#then
+#    # reset light-locker (xubuntu has it lock by default)
+#    gsettings reset-recursively apps.light-locker
 
-    XFCE_ACTIVE=""
-    XFCE_ACTIVE=$(wmctrl -m | grep -i Xfwm4)
-    if [ "$XFCE_ACTIVE" ];
-    then
-        MSG+="<b>XFCE Active:</b> Restarting...\n\n"
-        xfce4-panel -q
-        sleep 1
-        killall xfconfd
-        sleep 1
-        rm -r /home/$USER/.config/xfce4/
-        sleep 1
-        xfce4-panel &
-        # dockbarx won't be reset, but since default doesn't use it, no prob
-        # NOTE: COULD call wasta-xfce-layout default yes here but I don't
-        #   think needed and may complicate things
-    else
-        rm -r /home/$USER/.config/xfce4/
-    fi
+#    XFCE_ACTIVE=""
+#    XFCE_ACTIVE=$(wmctrl -m | grep -i Xfwm4)
+#    if [ "$XFCE_ACTIVE" ];
+#    then
+#        MSG+="<b>XFCE Active:</b> Restarting...\n\n"
+#        xfce4-panel -q
+#        sleep 1
+#        killall xfconfd
+#        sleep 1
+#        rm -r /home/$USER/.config/xfce4/
+#        sleep 1
+#        xfce4-panel &
+#        # dockbarx won't be reset, but since default doesn't use it, no prob
+#        # NOTE: COULD call wasta-xfce-layout default yes here but I don't
+#        #   think needed and may complicate things
+#    else
+#        rm -r /home/$USER/.config/xfce4/
+#    fi
 
-    MSG+="User settings for <b>XFCE Desktop</b> reset.\n\n"
-fi
+#    MSG+="User settings for <b>XFCE Desktop</b> reset.\n\n"
+#fi
 
 # ------------------------------------------------------------------------------
 # Restart current session
 # ------------------------------------------------------------------------------
 sleep 2
 
-# Check if MUFFIN window manager is active (Cinnamon)
-CINNAMON_ACTIVE=""
-CINNAMON_ACTIVE=$(wmctrl -m | grep -i Muffin)
-if [ "$CINNAMON_ACTIVE" ];
-then
+case "$XDG_CURRENT_DESKTOP" in
+X-Cinnamon)
     MSG+="<b>Cinnamon Active:</b> Restarting...\n\n"
     nohup >/dev/null 2>&1 cinnamon --replace & >/dev/null 2>&1
-fi
+;;
 
-# Check if GNOME window manager is active
-# check what Ubuntu session gives
-GNOME_ACTIVE=""
-GNOME_ACTIVE=$(wmctrl -m | grep -i GNOME)
-if [ "$GNOME_ACTIVE" ];
-then
+ubuntu:GNOME|wasta-gnome:ubuntu:GNOME)
     MSG+="<b>GNOME Active:</b> Restarting...\n\n"
     killall -SIGQUIT gnome-shell
     # nohup >/dev/null 2>&1 gnome-shell --replace & >/dev/null 2>&1
-fi
+;;
+
+*)
+    MSG+="<b>Desktop restart not supported:</b> $XDG_CURRENT_DESKTOP\n\n"
+;;
+
+esac
 
 # ------------------------------------------------------------------------------
 # Finished

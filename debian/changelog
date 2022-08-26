@@ -1,3 +1,9 @@
+wasta-core (22.04.1.1) jammy; urgency=medium
+
+  * cleanup of wasta-reset for 22.04
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Fri, 26 Aug 2022 16:15:59 -0500
+
 wasta-core (22.04.1.0) jammy; urgency=medium
 
   * minor adjustments to app-installs, app-removals for .1 release

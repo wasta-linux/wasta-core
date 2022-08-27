@@ -1,0 +1,149 @@
+#!/bin/bash
+
+# ==============================================================================
+# wasta-disable-hwe
+#
+#   disable HWE stack as we want .1 ISOs to NOT auto-upgrade kernel versions
+#
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Setup script to run with superuser permissions
+# ------------------------------------------------------------------------------
+if [ "$(whoami)" != "root" ]; then
+    echo
+    echo "This script needs to run with superuser permissions."
+    echo "----------------------------------------------------"
+    # below will return <blank> if user not in sudo group
+    OUT=$(groups $(whoami) | grep "sudo")
+
+    if [ "$OUT" ]; then
+        # user has sudo permissions: use them to re-run the script
+        echo
+        echo "If prompted, enter the sudo password."
+        #re-run script with sudo
+        sudo bash $0 $*
+        LASTERRORLEVEL=$?
+    else
+        #user doesn't have sudo: limited user, so prompt for sudo user
+        until [ "$OUT" ]; do
+            echo
+            echo "Current user doesn't have sudo permissions."
+            echo
+            read -p "Enter admin id (blank for root) to run this script:  " SUDO_ID
+
+            # set SUDO_ID to root if not entered
+            if [ "$SUDO_ID" ]; then
+                OUT=$(groups ${SUDO_ID} | grep "sudo")
+            else
+                SUDO_ID="root"
+                # manually assign $OUT to anything because we will use root!
+                OUT="root"
+            fi
+        done
+
+        # re-run script with $SUDO_ID 
+        echo
+        echo "Enter password for $SUDO_ID (need to enter twice)."
+        su $SUDO_ID -c "sudo bash $0 $*"
+        LASTERRORLEVEL=$?
+
+        # give 2nd chance if entered pwd wrong (su doesn't give 2nd chance)
+        if [ $LASTERRORLEVEL == 1 ]; then
+            su $SUDO_ID -c "sudo bash $0 $*"
+            LASTERRORLEVEL=$?
+        fi
+    fi
+
+    echo
+    read -p "FINISHED:  Press <ENTER> to exit..."
+    exit $LASTERRORLEVEL
+fi
+
+# ------------------------------------------------------------------------------
+# Initial Setup
+# ------------------------------------------------------------------------------
+
+# if 'auto' parameter passed, run non-interactively
+if [ "$1" == "auto" ];
+then
+    AUTO="auto"
+    
+    # needed for apt-get
+    YES="--yes"
+    DEBIAN_NONINTERACTIVE="env DEBIAN_FRONTEND=noninteractive"
+
+    # needed for gdebi
+    INTERACTIVE="-n"
+
+    # needed for dpkg-reconfigure
+    DPKG_FRONTEND="--frontend=noninteractive"
+else
+    AUTO=""
+    YES=""
+    DEBIAN_NONINTERACTIVE=""
+    INTERACTIVE=""
+    DPKG_FRONTEND=""
+fi
+
+echo
+echo "========================================================================="
+echo "=== Wasta-Linux Disable HWE Support ====================================="
+echo "========================================================================="
+echo
+echo "Ubuntu 20.04+ auto-enables the HWE stack for their .1 ISOs, which"
+echo "means the kernel will be upgraded between major versions for newer"
+echo "hardware support. However, this can lead to working systems having"
+echo "hardware issues (wifi, graphics, Virtualbox support, etc) when the"
+echo "newer linux kernel is installed."
+echo
+echo "The Wasta-Linux policy is to release x.y.1 ISOs without a changing kernel"
+echo "version, and then subsequent ISOs (x.y.2+) will have HWE enablement"
+echo "so that when used on newer systems they will have hardware support."
+
+echo
+
+if [ "${AUTO}" ];
+then
+    echo "Disabling HWE support...."
+else
+    read -p "Disable HWE support? (Y/n) " DISABLE_HWE
+fi
+
+echo
+
+if [ "${DISABLE_HWE^^}" != "N" ];
+then
+    echo
+    echo "*** DISABLING HWE Support..."
+    echo
+    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
+        linux-generic"
+
+    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES purge \
+        linux-generic-hwe-22.04 \
+        linux-headers-generic-hwe-22.04 \
+        linux-image-generic-hwe-22.04"
+else
+    echo
+    echo "*** ENABLING HWE Support..."
+    echo
+    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
+        linux-generic-hwe-22.04"
+
+    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES purge \
+        linux-generic \
+        linux-headers-generic \
+        linux-image-generic"
+fi
+
+# ------------------------------------------------------------------------------
+# Finished
+# ------------------------------------------------------------------------------
+printf "\n\n"
+echo "========================================================================="
+echo "=== Script Finished ====================================================="
+echo "========================================================================="
+
+
+exit 0

@@ -251,12 +251,13 @@ echo
 # hardinfo: system profiler
 # hddtemp: terminal - harddrive temp checker N/A 22.04
 # hfsprogs: for apple hfs compatiblity
+# hplip: hp printer utility
 # htop: process browser
 # httrack: website download utility
 # imagemagick: terminal - image resizing, etc. (needed for nemo resize action)
 # inkscape: vector graphics editor
 # inotify-tools: terminal - watch for file changes
-# iperf: terminal - network bandwidth measuring
+# iperf3: terminal - network bandwidth measuring
 # keepassxc: password manager (xc is the community port that is more up to date)
 # keyman: keyman keyboard app
 # klavaro: typing tutor
@@ -379,12 +380,13 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     gufw \
     hardinfo \
     hfsprogs \
+    hplip \
     htop \
     httrack \
     imagemagick \
     inkscape \
     inotify-tools \
-    iperf \
+    iperf3 \
     keepassxc \
     keyman \
     klavaro \
@@ -466,6 +468,18 @@ apt-get $YES install $INSTALL_APPS
 # Enable Flathub
 # ------------------------------------------------------------------------------
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+# ------------------------------------------------------------------------------
+# Install hp-plugin (non-interactive)
+# ------------------------------------------------------------------------------
+# Install hp-plugin automatically: needed by some HP printers such as black
+#   HP m127 used by SIL Ethiopia. Don't display output to confuse user.
+
+echo
+echo "*** Installing hp-plugin"
+    yes | hp-plugin -p $DIR/hp-plugin-$SERIES/ >/dev/null 2>&1
+echo "*** hp-plugin install complete"
+echo
 
 # ------------------------------------------------------------------------------
 # wasta-remastersys conf updates

@@ -251,7 +251,7 @@ echo
 # hardinfo: system profiler
 # hddtemp: terminal - harddrive temp checker N/A 22.04
 # hfsprogs: for apple hfs compatiblity
-# hplip: hp printer utility
+# hplip hplip-plugin: hp printer utility and proprietary plugin
 # htop: process browser
 # httrack: website download utility
 # imagemagick: terminal - image resizing, etc. (needed for nemo resize action)
@@ -380,7 +380,8 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     gufw \
     hardinfo \
     hfsprogs \
-    hplip \
+    hplip
+        hplip-plugin \
     htop \
     httrack \
     imagemagick \
@@ -469,17 +470,19 @@ apt-get $YES install $INSTALL_APPS
 # ------------------------------------------------------------------------------
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
+# 2022-11-22 rik: UPDATE: I got an updated hplip from a ppa that also
+#   includes the hplip-plugin package.
 # ------------------------------------------------------------------------------
 # Install hp-plugin (non-interactive)
 # ------------------------------------------------------------------------------
 # Install hp-plugin automatically: needed by some HP printers such as black
 #   HP m127 used by SIL Ethiopia. Don't display output to confuse user.
 
-echo
-echo "*** Installing hp-plugin"
-    yes | hp-plugin -p $DIR/hp-plugin-$SERIES/ >/dev/null 2>&1
-echo "*** hp-plugin install complete"
-echo
+#echo
+#echo "*** Installing hp-plugin"
+#    yes | hp-plugin -p $DIR/resources/hp-plugin-$SERIES/ >/dev/null 2>&1
+#echo "*** hp-plugin install complete"
+#echo
 
 # ------------------------------------------------------------------------------
 # wasta-remastersys conf updates

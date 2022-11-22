@@ -1,8 +1,8 @@
 wasta-core (22.04.1.4) jammy; urgency=medium
 
-  * app-installs.sh: add hp-plugin install
+  * app-installs.sh: add hplip-plugin from PPA
 
- -- Rik Shaw <rikshaw76@gmail.com>  Tue, 22 Nov 2022 11:39:35 -0600
+ -- Rik Shaw <rikshaw76@gmail.com>  Tue, 22 Nov 2022 13:01:58 -0600
 
 wasta-core (22.04.1.3) jammy; urgency=medium
 

@@ -67,12 +67,16 @@ then
 
     # needed for dpkg-reconfigure
     DPKG_FRONTEND="--frontend=noninteractive"
+
+    # needed for flatpak
+    FLATPAK_NONINTERACTIVE="--noninteractive"
 else
     AUTO=""
     YES=""
     DEBIAN_NONINTERACTIVE=""
     INTERACTIVE=""
     DPKG_FRONTEND=""
+    FLATPAK_NONINTERACTIVE=""
 fi
 
 # ------------------------------------------------------------------------------
@@ -486,7 +490,7 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 # ------------------------------------------------------------------------------
 # Flatpak Installs
 # ------------------------------------------------------------------------------
-flatpak install --system flathub org.sil.Bloom
+flatpak install --system $FLATPAK_NONINTERACTIVE flathub org.sil.Bloom
 
 # 2022-11-22 rik: UPDATE: I got an updated hplip from a ppa that also
 #   includes the hplip-plugin package (installed above).

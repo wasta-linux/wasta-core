@@ -1,3 +1,10 @@
+wasta-core (22.04.1.5) jammy; urgency=medium
+
+  * app-installs.sh: add bloom flatpak, only install wasta-
+    remastersys if x86_64 arch, only add skype repo of x86_64
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Wed, 21 Dec 2022 11:01:57 -0600
+
 wasta-core (22.04.1.4) jammy; urgency=medium
 
   * app-installs.sh: add hplip-plugin from PPA

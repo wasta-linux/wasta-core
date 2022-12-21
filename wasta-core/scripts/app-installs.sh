@@ -51,6 +51,7 @@ echo
 # Setup variables for later reference
 DIR=/usr/share/wasta-core
 SERIES=$(lsb_release -sc)
+ARCH=$(uname -m)
 
 # if 'auto' parameter passed, run non-interactively
 if [ "$1" == "auto" ];
@@ -141,14 +142,17 @@ fi
 #rm -f $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-1*
 
 # Add Skype repository
-if ! [ -e $APT_SOURCES_D/skype-stable.list ];
+if [ $ARCH == 'x86_64' ];
 then
-    echo
-    echo "*** Adding Skype Repository"
-    echo
+    if ! [ -e $APT_SOURCES_D/skype-stable.list ];
+    then
+        echo
+        echo "*** Adding Skype Repository"
+        echo
 
-    echo "deb https://repo.skype.com/deb stable main" | \
-        tee $APT_SOURCES_D/skype-stable.list
+        echo "deb https://repo.skype.com/deb stable main" | \
+            tee $APT_SOURCES_D/skype-stable.list
+    fi
 fi
 
 # add Keyman PPA
@@ -437,7 +441,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     wasta-menus \
     wasta-offline wasta-offline-setup \
     wasta-papirus papirus-icon-theme \
-    wasta-remastersys \
     wasta-resources-core \
     wavemon \
     webp-pixbuf-loader \
@@ -451,6 +454,16 @@ LASTERRORLEVEL=$?
 if [ "$LASTERRORLEVEL" -ne "0" ];
 then
     aptError
+fi
+
+
+# ------------------------------------------------------------------------------
+# Default packages not available on all arches
+# ------------------------------------------------------------------------------
+if [ "${ARCH}" == "x86_64" ]; then
+    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
+        wasta-remastersys \
+        "
 fi
 
 # ------------------------------------------------------------------------------
@@ -470,8 +483,13 @@ apt-get $YES install $INSTALL_APPS
 # ------------------------------------------------------------------------------
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
+# ------------------------------------------------------------------------------
+# Flatpak Installs
+# ------------------------------------------------------------------------------
+flatpak install --system flathub org.sil.Bloom
+
 # 2022-11-22 rik: UPDATE: I got an updated hplip from a ppa that also
-#   includes the hplip-plugin package.
+#   includes the hplip-plugin package (installed above).
 # ------------------------------------------------------------------------------
 # Install hp-plugin (non-interactive)
 # ------------------------------------------------------------------------------
@@ -497,7 +515,6 @@ then
     # set default CD Label and ISO name
     WASTA_ID="$(sed -n "\@^ID=@s@^ID=@@p" /etc/wasta-release)"
     WASTA_VERSION="$(sed -n "\@^VERSION=@s@^VERSION=@@p" /etc/wasta-release)"
-    ARCH=$(uname -m)
     if [ $ARCH == 'x86_64' ];
     then
         WASTA_ARCH="64bit"

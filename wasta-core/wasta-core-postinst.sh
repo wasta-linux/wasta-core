@@ -37,6 +37,8 @@ DIR=/usr/share/wasta-core
 
 SERIES=$(lsb_release -sc)
 
+ARCH=$(uname -m)
+
 # ------------------------------------------------------------------------------
 # Configure sources and apt settings
 # ------------------------------------------------------------------------------
@@ -92,8 +94,9 @@ sed -i -e '/#wasta$/! s@.*\(deb .*ubuntu.com/ubuntu.* '$SERIES'-security \)@\1@'
 # DO NOT match any lines ending in #wasta
 sed -i -e '/#wasta$/! s@.*\(deb .*canonical.com/ubuntu.* '$SERIES' \)@\1@' $APT_SOURCES
 
-# add SIL repository (only supports i386 / amd64)
+# add SIL repositories (only supports i386 / amd64)
 if [ $ARCH == 'x86_64' ] || [ $ARCH == 'i386' ];
+then
     if ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES.list ];
     then
         echo

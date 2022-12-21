@@ -92,35 +92,37 @@ sed -i -e '/#wasta$/! s@.*\(deb .*ubuntu.com/ubuntu.* '$SERIES'-security \)@\1@'
 # DO NOT match any lines ending in #wasta
 sed -i -e '/#wasta$/! s@.*\(deb .*canonical.com/ubuntu.* '$SERIES' \)@\1@' $APT_SOURCES
 
-# add SIL repository
-if ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES.list ];
-then
-    echo
-    echo "*** Adding SIL Repository"
-    echo
+# add SIL repository (only supports i386 / amd64)
+if [ $ARCH == 'x86_64' ] || [ $ARCH == 'i386' ];
+    if ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES.list ];
+    then
+        echo
+        echo "*** Adding SIL Repository"
+        echo
 
-    echo "deb http://packages.sil.org/ubuntu $SERIES main" | \
-        tee $APT_SOURCES_D/packages-sil-org-$SERIES.list
-    echo "# deb-src http://packages.sil.org/ubuntu $SERIES main" | \
-        tee -a $APT_SOURCES_D/packages-sil-org-$SERIES.list
-else
+        echo "deb http://packages.sil.org/ubuntu $SERIES main" | \
+            tee $APT_SOURCES_D/packages-sil-org-$SERIES.list
+        echo "# deb-src http://packages.sil.org/ubuntu $SERIES main" | \
+            tee -a $APT_SOURCES_D/packages-sil-org-$SERIES.list
+    else
     # found, but ensure PSO main ACTIVE (user could have accidentally disabled)
     # DO NOT match any lines ending in #wasta 
-    sed -i -e '/#wasta$/! s@.*\(deb http[s]*://packages.sil.org\)@\1@' \
-        $APT_SOURCES_D/packages-sil-org-$SERIES.list
-fi
+        sed -i -e '/#wasta$/! s@.*\(deb http[s]*://packages.sil.org\)@\1@' \
+            $APT_SOURCES_D/packages-sil-org-$SERIES.list
+    fi
 
-# add SIL Experimental repository
-if ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES-experimental.list ];
-then
-    echo
-    echo "*** Adding SIL Experimental Repository (inactive)"
-    echo
+    # add SIL Experimental repository
+    if ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES-experimental.list ];
+    then
+        echo
+        echo "*** Adding SIL Experimental Repository (inactive)"
+        echo
 
-    echo "# deb http://packages.sil.org/ubuntu $SERIES-experimental main" | \
-        tee $APT_SOURCES_D/packages-sil-org-$SERIES-experimental.list
-    echo "# deb-src http://packages.sil.org/ubuntu $SERIES-experimental main" | \
-        tee -a $APT_SOURCES_D/packages-sil-org-$SERIES-experimental.list
+        echo "# deb http://packages.sil.org/ubuntu $SERIES-experimental main" | \
+            tee $APT_SOURCES_D/packages-sil-org-$SERIES-experimental.list
+        echo "# deb-src http://packages.sil.org/ubuntu $SERIES-experimental main" | \
+            tee -a $APT_SOURCES_D/packages-sil-org-$SERIES-experimental.list
+    fi
 fi
 
 # add Wasta-Linux PPA

@@ -141,7 +141,7 @@ fi
 #echo
 #rm -f $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-1*
 
-# Add Skype repository
+# Add Skype repository (only supports amd64)
 if [ $ARCH == 'x86_64' ];
 then
     if ! [ -e $APT_SOURCES_D/skype-stable.list ];

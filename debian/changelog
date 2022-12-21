@@ -1,3 +1,9 @@
+wasta-core (22.04.1.6) jammy; urgency=medium
+
+  * postinst: only add PSO repos if ARCH is i386 or x86_64
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Wed, 21 Dec 2022 12:52:15 -0600
+
 wasta-core (22.04.1.5) jammy; urgency=medium
 
   * app-installs.sh: add bloom flatpak, only install wasta-

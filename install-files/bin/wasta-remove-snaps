@@ -1,0 +1,157 @@
+#!/bin/bash
+
+# ==============================================================================
+# wasta-remove-snaps
+#
+#   remove installed snaps: since we don't ship any snaps by default we want
+#   to remove the base snaps in order to reduce ISO size
+#
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Setup script to run with superuser permissions
+# ------------------------------------------------------------------------------
+if [ "$(whoami)" != "root" ]; then
+    echo
+    echo "This script needs to run with superuser permissions."
+    echo "----------------------------------------------------"
+    # below will return <blank> if user not in sudo group
+    OUT=$(groups $(whoami) | grep "sudo")
+
+    if [ "$OUT" ]; then
+        # user has sudo permissions: use them to re-run the script
+        echo
+        echo "If prompted, enter the sudo password."
+        #re-run script with sudo
+        sudo bash $0 $*
+        LASTERRORLEVEL=$?
+    else
+        #user doesn't have sudo: limited user, so prompt for sudo user
+        until [ "$OUT" ]; do
+            echo
+            echo "Current user doesn't have sudo permissions."
+            echo
+            read -p "Enter admin id (blank for root) to run this script:  " SUDO_ID
+
+            # set SUDO_ID to root if not entered
+            if [ "$SUDO_ID" ]; then
+                OUT=$(groups ${SUDO_ID} | grep "sudo")
+            else
+                SUDO_ID="root"
+                # manually assign $OUT to anything because we will use root!
+                OUT="root"
+            fi
+        done
+
+        # re-run script with $SUDO_ID 
+        echo
+        echo "Enter password for $SUDO_ID (need to enter twice)."
+        su $SUDO_ID -c "sudo bash $0 $*"
+        LASTERRORLEVEL=$?
+
+        # give 2nd chance if entered pwd wrong (su doesn't give 2nd chance)
+        if [ $LASTERRORLEVEL == 1 ]; then
+            su $SUDO_ID -c "sudo bash $0 $*"
+            LASTERRORLEVEL=$?
+        fi
+    fi
+
+    echo
+    read -p "FINISHED:  Press <ENTER> to exit..."
+    exit $LASTERRORLEVEL
+fi
+
+# ------------------------------------------------------------------------------
+# Initial Setup
+# ------------------------------------------------------------------------------
+
+# if 'auto' parameter passed, run non-interactively
+if [ "$1" == "auto" ];
+then
+    AUTO="auto"
+    
+    # needed for apt-get
+    YES="--yes"
+    DEBIAN_NONINTERACTIVE="env DEBIAN_FRONTEND=noninteractive"
+
+    # needed for gdebi
+    INTERACTIVE="-n"
+
+    # needed for dpkg-reconfigure
+    DPKG_FRONTEND="--frontend=noninteractive"
+else
+    AUTO=""
+    YES=""
+    DEBIAN_NONINTERACTIVE=""
+    INTERACTIVE=""
+    DPKG_FRONTEND=""
+fi
+
+echo
+echo "========================================================================="
+echo "=== Wasta-Linux Remove Snaps ============================================"
+echo "========================================================================="
+echo
+echo "To reduce the size of the ISO, this script will remove all installed snap"
+echo "packages. Snapd itself is not removed to facilitate easy installation"
+echo "of snaps, but the pre-installed platform snaps are all removed since"
+echo "they are quickly outdated."
+
+if [ "${AUTO}" ];
+then
+    echo
+else
+    echo
+    read -p "Remove installed snaps? (Y/n) " REMOVE_SNAPS
+fi
+
+echo
+
+if [ "${REMOVE_SNAPS^^}" != "N" ];
+then
+    echo
+    echo "*** Removing installed snaps..."
+    echo
+    
+    # can't remove bare/core/snapd until other dependent snaps removed
+    snap list | awk '!/Name|core|bare|snapd/{print $1}' |
+        while read snapname; do
+            snap remove --purge "$snapname"
+        done
+
+    # remove core## snaps first so can later remove core and finally snapd
+    snap list | awk '/bare|core[0-9]/{print $1}' |
+        while read snapname; do
+            snap remove --purge "$snapname"
+        done
+
+    # remove disabled snaps (this will catch any prior versions of core):
+    snap list --all | awk '/disabled/{print $1, $3}' |
+        while read snapname revision; do
+            snap remove "$snapname" --revision="$revision"
+        done
+
+    # Can't remove 'core' snap, says it is "used by the model", so also can't
+    #   remove snapd snap since it will only be removed if "all other snaps
+    #   removed first". So manually delete the core snap, then later can remove
+    rm -f /var/lib/snapd/snaps/core*.snap
+
+    # finally can remove core and (after) snapd
+    snap list | awk '/core|snapd/{print $1}' |
+        while read snapname; do
+            snap remove --purge "$snapname"
+        done
+
+    # even remove --purge snaps does not remove them from cache.
+    rm -rf /var/lib/snapd/cache/*
+fi
+
+# ------------------------------------------------------------------------------
+# Finished
+# ------------------------------------------------------------------------------
+printf "\n\n"
+echo "========================================================================="
+echo "=== Script Finished ====================================================="
+echo "========================================================================="
+
+exit 0

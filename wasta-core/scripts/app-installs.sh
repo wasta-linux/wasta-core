@@ -388,7 +388,7 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     gufw \
     hardinfo \
     hfsprogs \
-    hplip
+    hplip \
         hplip-plugin \
     htop \
     httrack \
@@ -490,7 +490,8 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 # ------------------------------------------------------------------------------
 # Flatpak Installs
 # ------------------------------------------------------------------------------
-flatpak install --system $FLATPAK_NONINTERACTIVE flathub org.sil.Bloom
+# NOT installing Bloom because it adds approx. 2.5-2.8GB to the system
+#flatpak install --system $FLATPAK_NONINTERACTIVE flathub org.sil.Bloom
 
 # 2022-11-22 rik: UPDATE: I got an updated hplip from a ppa that also
 #   includes the hplip-plugin package (installed above).

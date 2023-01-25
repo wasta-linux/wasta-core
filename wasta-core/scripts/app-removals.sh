@@ -185,6 +185,10 @@ fi
 # 2016-05-04 rik: adding --purge so extra cruft from packages cleaned up
 apt-get $YES --purge autoremove
 
+flatpak remove --unused  --delete-data
+
+rm -rf /var/lib/flatpak/repo/tmp/*
+
 echo
 echo "*** Script Exit: app-removals.sh"
 echo

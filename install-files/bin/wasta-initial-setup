@@ -240,6 +240,22 @@ then
     exit 1
 fi
 
+if [ -x /usr/bin/snap ];
+then
+    echo
+    echo "*** Removing installed snaps to reduce ISO size"
+    echo
+    bash wasta-remove-snaps $AUTO
+    LASTERRORLEVEL=$?
+    if [ "$LASTERRORLEVEL" -ne "0" ];
+    then
+        echo
+        echo " *** ERROR in return from wasta-remove-snaps. Exiting."
+        echo
+        exit 1
+    fi
+fi
+
 # ------------------------------------------------------------------------------
 # Finished
 # ------------------------------------------------------------------------------

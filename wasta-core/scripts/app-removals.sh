@@ -34,9 +34,11 @@ then
     
     # needed for apt-get
     YES="--yes"
+    FLAT_YES="-y"
 else
     AUTO=""
     YES=""
+    FLAT_YES=""
 fi
 
 # ------------------------------------------------------------------------------
@@ -185,7 +187,7 @@ fi
 # 2016-05-04 rik: adding --purge so extra cruft from packages cleaned up
 apt-get $YES --purge autoremove
 
-flatpak remove --unused  --delete-data
+flatpak uninstall $FLAT_YES --unused --delete-data
 
 rm -rf /var/lib/flatpak/repo/tmp/*
 

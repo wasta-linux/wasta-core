@@ -146,7 +146,7 @@ apt-get $YES purge $pkgToRemoveList
 # ------------------------------------------------------------------------------
 
 snap remove --purge firefox
-snap remove --purge snap-store
+#snap remove --purge snap-store # keep so users can find snaps
 
 # ------------------------------------------------------------------------------
 # separately remove 'dkms' since some users may want to keep

@@ -154,7 +154,7 @@ then
         echo "*** Adding Skype Repository"
         echo
 
-        echo "deb https://repo.skype.com/deb stable main" | \
+        echo "deb [arch=amd64] https://repo.skype.com/deb stable main" | \
             tee $APT_SOURCES_D/skype-stable.list
     fi
 fi
@@ -247,7 +247,7 @@ echo
 # gnome-maps: GUI map viewer
 # gnome-nettool: network tool GUI (traceroute, lookup, etc)
 # gnome-screenshot: GUI
-# gnome-software: GUI allows deb, flatpak, snap integration (no PPA or 3rd party
+# DROPPED 22.04: bad performance / memory use gnome-software: GUI allows deb, flatpak, snap integration (no PPA or 3rd party
 #   deb repos however)
 #   gnome-software-plugin-flatpak
 #   gnome-software-plugin-snap
@@ -274,6 +274,7 @@ echo
 # libreoffice-sdbc-hsqldb: (pre-firebird) db backend for LO base
 # libtext-pdf-perl: provides pdfbklt (make A5 booklet from pdf)
 # meld: graphical text file compare utility
+# mintinstall: supports flatpak and deb
 # mkisofs: teminal - this version (from cdrtools source package) allows ISOs
 #   > 4GB in size. Alternative version from main repos (genisoimage package)
 #   does NOT allow this. Included in the wasta-applications ppa
@@ -378,9 +379,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     gnome-maps \
     gnome-nettool \
     gnome-screenshot \
-    gnome-software \
-        gnome-software-plugin-flatpak \
-        gnome-software-plugin-snap \
     gnome-system-monitor \
     gparted \
     grsync \
@@ -404,6 +402,7 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
         libreoffice-sdbc-hsqldb \
     libtext-pdf-perl \
     meld \
+    mintinstall \
     mkisofs \
     modem-manager-gui \
     mtp-tools \

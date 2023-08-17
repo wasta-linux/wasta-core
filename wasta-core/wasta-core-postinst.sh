@@ -7,8 +7,6 @@
 #       installation of wasta-core. It can be manually re-run, but is
 #       only intended to be run at package installation.
 #
-#   2022-01-26 rik: initial jammy script
-#
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -190,6 +188,13 @@ then
     echo "*** REMOVING Wasta-Linux Testing PPA"
     echo
     rm -f $APT_SOURCES_D/wasta-linux-ubuntu-wasta-testing-$SERIES*
+fi
+
+# IF Skype Repository found, ensure that it is set for [arch=amd64] so
+#   won't give errors when 32bit repo not found (skype only publishes amd64)
+if [ -e $APT_SOURCES_D/skype-stable.list ];
+then
+    sed -i -e 's@deb http@deb \[arch=amd64\] http@' $APT_SOURCES_D/skype-stable.list
 fi
 
 # remove any partial updates: these are often broken if they exist

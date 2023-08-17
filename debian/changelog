@@ -1,3 +1,11 @@
+wasta-core (22.04.3.0) jammy; urgency=medium
+
+  * postinst: correct skype repo to be amd64 only
+  * app-removals: do NOT remove snap-store
+  * app-installs: replace gnome-software with mintinstall
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Thu, 17 Aug 2023 11:54:45 -0500
+
 wasta-core (22.04.1.9) jammy; urgency=medium
 
   * app-removals.sh: automate removal of flatpak data

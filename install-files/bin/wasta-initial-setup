@@ -195,7 +195,7 @@ then
 fi
 
 # Set default layout to redmond7 (ensures menu-label removed besides gschema defaults)
-if [ -x /usr/bin/cinnamon-layout-system ];
+if [ "$(which cinnamon-layout-system)" ];
 then
     echo
     echo "*** Setting cinnamon-layout cinnamon system default to redmond7"
@@ -240,7 +240,7 @@ then
     exit 1
 fi
 
-if [ -x /usr/bin/snap ];
+if [ "$(which snap)" ];
 then
     echo
     echo "*** Removing installed snaps to reduce ISO size"

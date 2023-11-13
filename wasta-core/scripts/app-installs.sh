@@ -484,13 +484,15 @@ apt-get $YES install $INSTALL_APPS
 # ------------------------------------------------------------------------------
 # Enable Flathub
 # ------------------------------------------------------------------------------
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+if [ "$(which flatpak)" ]; then
+  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-# ------------------------------------------------------------------------------
-# Flatpak Installs
-# ------------------------------------------------------------------------------
-# NOT installing Bloom because it adds approx. 2.5-2.8GB to the system
-#flatpak install --system $FLATPAK_NONINTERACTIVE flathub org.sil.Bloom
+  # ----------------------------------------------------------------------------
+  # Flatpak Installs
+  # ----------------------------------------------------------------------------
+  # NOT installing Bloom because it adds approx. 2.5-2.8GB to the system
+  #flatpak install --system $FLATPAK_NONINTERACTIVE flathub org.sil.Bloom
+fi
 
 # 2022-11-22 rik: UPDATE: I got an updated hplip from a ppa that also
 #   includes the hplip-plugin package (installed above).

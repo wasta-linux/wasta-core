@@ -145,8 +145,10 @@ apt-get $YES purge $pkgToRemoveList
 # separately remove snaps since some users may want to keep
 # ------------------------------------------------------------------------------
 
-snap remove --purge firefox
-#snap remove --purge snap-store # keep so users can find snaps
+if [ "$(which snap)" ]; then
+  snap remove --purge firefox
+  #snap remove --purge snap-store # keep so users can find snaps
+fi
 
 # ------------------------------------------------------------------------------
 # separately remove 'dkms' since some users may want to keep
@@ -171,12 +173,12 @@ apt-get $YES purge $pkgToRemoveList
 # cleanup dangling folders
 # ------------------------------------------------------------------------------
 # some removals do not clean up after themselves
-#if [ ! -x /usr/bin/blueman-manager ];
+#if ! [ "$(which blueman-manager)" ];
 #then
 #    rm -rf /var/lib/blueman
 #fi
 
-if [ ! -x /usr/bin/whoopsie ];
+if ! [ "$(which whoopsie)" ];
 then
     rm -rf /var/lib/whoopsie
 fi
@@ -187,7 +189,9 @@ fi
 # 2016-05-04 rik: adding --purge so extra cruft from packages cleaned up
 apt-get $YES --purge autoremove
 
-flatpak uninstall $FLAT_YES --unused --delete-data
+if [ "$(which flatpak)" ]; then
+  flatpak uninstall $FLAT_YES --unused --delete-data
+fi
 
 rm -rf /var/lib/flatpak/repo/tmp/*
 

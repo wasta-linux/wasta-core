@@ -95,7 +95,8 @@ sed -i -e '/#wasta$/! s@.*\(deb .*canonical.com/ubuntu.* '$SERIES' \)@\1@' $APT_
 # add SIL repositories (only supports i386 / amd64)
 if [ $ARCH == 'x86_64' ] || [ $ARCH == 'i386' ];
 then
-    if ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES.list ];
+    if ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES.sources ] \
+    && ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES.list ];
     then
         echo
         echo "*** Adding SIL Repository"
@@ -105,7 +106,10 @@ then
             tee $APT_SOURCES_D/packages-sil-org-$SERIES.list
         echo "# deb-src http://packages.sil.org/ubuntu $SERIES main" | \
             tee -a $APT_SOURCES_D/packages-sil-org-$SERIES.list
-    else
+    elif [ -e $APT_SOURCES_D/packages-sil-org-$SERIES.sources ]; then
+        # found, but ensure PSO main ACTIVE (user could have accidentally disabled)
+        sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/packages-sil-org-$SERIES.sources
+    elif [ -e $APT_SOURCES_D/packages-sil-org-$SERIES.list ]; then
     # found, but ensure PSO main ACTIVE (user could have accidentally disabled)
     # DO NOT match any lines ending in #wasta 
         sed -i -e '/#wasta$/! s@.*\(deb http[s]*://packages.sil.org\)@\1@' \
@@ -113,7 +117,8 @@ then
     fi
 
     # add SIL Experimental repository
-    if ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES-experimental.list ];
+    if ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES-experimental.sources ] \
+    && ! [ -e $APT_SOURCES_D/packages-sil-org-$SERIES-experimental.list ];
     then
         echo
         echo "*** Adding SIL Experimental Repository (inactive)"
@@ -127,7 +132,8 @@ then
 fi
 
 # add Wasta-Linux PPA
-if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list ];
+if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.sources ] \
+&& ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list ];
 then
     echo
     echo "*** Adding Wasta-Linux PPA"
@@ -137,7 +143,10 @@ then
         tee $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list
     echo "# deb-src http://ppa.launchpadcontent.net/wasta-linux/wasta/ubuntu $SERIES main" | \
         tee -a $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list
-else
+elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.sources ]; then
+    # found, but ensure Wasta-Linux PPA ACTIVE (user could have accidentally disabled)
+    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.sources
+elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list ]; then
     # found, but ensure Wasta-Linux PPA ACTIVE (user could have accidentally disabled)
     # DO NOT match any lines ending in #wasta
     sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
@@ -145,7 +154,8 @@ else
 fi
 
 # add Wasta-Apps PPA
-if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list ];
+if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.sources ] \
+&& ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list ];
 then
     echo
     echo "*** Adding Wasta-Linux Apps PPA"
@@ -155,7 +165,10 @@ then
         tee $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list
     echo "# deb-src http://ppa.launchpadcontent.net/wasta-linux/wasta-apps/ubuntu $SERIES main" | \
         tee -a $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list
-else
+elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.sources ]; then
+    # found, but ensure Wasta-Apps PPA ACTIVE (user could have accidentally disabled)
+    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.sources
+elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list ]; then
     # found, but ensure Wasta-Apps PPA ACTIVE (user could have accidentally disabled)
     # DO NOT match any lines ending in #wasta   
     sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
@@ -163,7 +176,8 @@ else
 fi
 
 # add Mozilla Team PPA
-if ! [ -e $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list ];
+if ! [ -e $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.sources ] \
+&& ! [ -e $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list ];
 then
     echo
     echo "*** Adding Mozilla Team PPA"
@@ -173,7 +187,10 @@ then
         tee $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list
     echo "# deb-src http://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu $SERIES main" | \
         tee -a $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list
-else
+elif [ -e $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.sources ]; then
+    # found, but ensure Mozilla Team PPA ACTIVE (user could have accidentally disabled)
+    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.sources
+elif [ -e $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list ]; then
     # found, but ensure Mozilla Team PPA ACTIVE (user could have accidentally disabled)
     # DO NOT match any lines ending in #wasta    
     sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
@@ -182,7 +199,8 @@ fi
 
 # IF Wasta-Testing PPA found, remove (do NOT want users having this, also
 #   developers should only temporarily have it)
-if [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-testing-$SERIES.list ];
+if [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-testing-$SERIES.sources ] \
+&& [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-testing-$SERIES.list ];
 then
     echo
     echo "*** REMOVING Wasta-Linux Testing PPA"
@@ -210,16 +228,24 @@ fi
 #echo "lightdm shared/default-x-display-manager select lightdm" \
 #    | debconf-set-selections --unseen
 
-# libdvd-pkg
-# don't think needed: libdvd-pkg libdvd-pkg/post-invoke_hook-remove boolean false
-echo "libdvd-pkg libdvd-pkg/build boolean true" \
+#24.04: the libdvd answers aren't working because the question is changed by the installer
+echo "libdvd-pkg libdvd-pkg/first-install note" \
     | debconf-set-selections
+# Enable automatic upgrades for ?   [libdvdcss2]
 echo "libdvd-pkg libdvd-pkg/post-invoke_hook-install boolean true" \
+    | debconf-set-selections
+#Download, build, and install ?     [libdvdcss2/1.4.3-1]
+echo "libdvd-pkg libdvd-pkg/build boolean true" \
     | debconf-set-selections
 
 # ttf-mscorefonts-installer
 echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula boolean true" \
     | debconf-set-selections
+
+#iperf3: (noble numbat)
+echo "iperf3 iperf3/start_daemon boolean false" \
+    | debconf-set-selections
+
 
 # ------------------------------------------------------------------------------
 # openssh server re-config

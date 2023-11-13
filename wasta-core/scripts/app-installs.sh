@@ -123,32 +123,37 @@ then
     cp $APT_SOURCES $APT_SOURCES.save
 fi
 
-# add LibreOffice 7.2 PPA
-#if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list ];
+# add LibreOffice 24.2 PPA
+#if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-5-$SERIES.sources ] \
+#&& ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-5-$SERIES.list ];
 #then
 #    echo
-#    echo "*** Adding LibreOffice 7.2 PPA"
+#    echo "*** Adding LibreOffice 24.2 PPA"
 #    echo
-#    echo "deb http://ppa.launchpadcontent.net/wasta-linux/libreoffice-7-2/ubuntu $SERIES main" | \
-#        tee $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
-#    echo "# deb-src http://ppa.launchpadcontent.net/wasta-linux/libreoffice-7-2/ubuntu $SERIES main" | \
-#        tee -a $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
-#else
+#    echo "deb http://ppa.launchpadcontent.net/wasta-linux/libreoffice-24-2/ubuntu $SERIES main" | \
+#        tee $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.list
+#    echo "# deb-src http://ppa.launchpadcontent.net/wasta-linux/libreoffice-24-2/ubuntu $SERIES main" | \
+#        tee -a $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.list
+#elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.sources ]; then
+#    # found, but ensure LibreOffice PPA ACTIVE (user could have accidentally disabled)
+#    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.sources
+#elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.list ]; then
 #    # found, but ensure LibreOffice PPA ACTIVE (user could have accidentally disabled)
 #    # DO NOT match any lines ending in #wasta
 #    sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
-#       $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-2-$SERIES.list
+#       $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.list
 #fi
 
 #echo
 #echo "*** Removing Older LibreOffice PPAs"
 #echo
-#rm -f $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-1*
+#rm -f $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-6*
 
 # Add Skype repository (only supports amd64)
 if [ $ARCH == 'x86_64' ];
 then
-    if ! [ -e $APT_SOURCES_D/skype-stable.list ];
+    if ! [ -e $APT_SOURCES_D/skype-stable.sources ] \
+    && ! [ -e $APT_SOURCES_D/skype-stable.list ];
     then
         echo
         echo "*** Adding Skype Repository"
@@ -160,7 +165,8 @@ then
 fi
 
 # add Keyman PPA
-if ! [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list ];
+if ! [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.sources ] \
+&& ! [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list ];
 then
     echo
     echo "*** Adding Keyman PPA"
@@ -169,7 +175,10 @@ then
         tee $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list
     echo "# deb-src http://ppa.launchpadcontent.net/keymanapp/keyman/ubuntu $SERIES main" | \
         tee -a $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list
- else
+elif [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.sources ]; then
+    # found, but ensure Keyman PPA ACTIVE (user could have accidentally disabled)
+    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.sources
+elif [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list ]; then
      # found, but ensure Keyman PPA ACTIVE (user could have accidentally disabled)
      # DO NOT match any lines ending in #wasta
      sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
@@ -313,6 +322,7 @@ echo
 #   wasta-remastersys or if needs to be updated by app-adjustments.sh
 # ubiquity-slideshow-wasta:
 # ubuntu-restricted-extras: mp3, flash, etc.
+#  VBOX WARNING: gstreamer1.0-vaapi caused X.org to crash on gdm3/cinnamon login
 # uget uget-integrator: GUI download manager (DTA in Firefox abandoned)
 # uptimed: terminal - provides "uprecords"
 # vim-tiny: terminal - text editor (don't want FULL vim or else in main menu)
@@ -330,6 +340,13 @@ echo
 # xsltproc: terminal - xslt, xml conversion program
 # youtube-dl: terminal - youtube / video downloads
 # zim: wiki style note taking app
+
+
+# DISABLED temporariliy for Noble
+apt install \
+        hplip-plugin \
+    pinta \
+
 
 $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     aisleriot \
@@ -387,7 +404,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     hardinfo \
     hfsprogs \
     hplip \
-        hplip-plugin \
     htop \
     httrack \
     imagemagick \
@@ -411,7 +427,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     nethogs \
     net-tools \
     pandoc \
-    pinta \
     pngcrush \
     qt5-style-plugins \
     redshift-gtk \

@@ -1,3 +1,11 @@
+wasta-core (24.04.0.4) noble; urgency=medium
+
+  * bump to 24.04.0.4 - initial release for noble numbat
+  * switch starting zswap via systemd instead of grub
+  * improve wasta-remove-snaps and add option to apt purge snapd
+
+ -- Justin Luth <jluth@mail.com>  Tue, 14 Nov 2023 13:33:38 -0500
+
 wasta-core (22.04.3.1) jammy; urgency=medium
 
   * wasta-disable-hwe add newer kernel/header cleanout as well

@@ -54,7 +54,7 @@ SERIES=$(lsb_release -sc)
 ARCH=$(uname -m)
 
 # if 'auto' parameter passed, run non-interactively
-if [ "$1" == "auto" ];
+if [ "${1^^}" == "AUTO" ];
 then
     AUTO="auto"
     

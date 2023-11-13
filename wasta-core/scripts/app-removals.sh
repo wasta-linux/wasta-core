@@ -28,7 +28,7 @@ echo
 DIR=/usr/share/wasta-core
 
 # if 'auto' parameter passed, run non-interactively
-if [ "$1" == "auto" ];
+if [ "${1^^}" == "AUTO" ];
 then
     AUTO="auto"
     

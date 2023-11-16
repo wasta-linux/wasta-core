@@ -203,18 +203,21 @@ then
     cinnamon-layout-system redmond7
 fi
 
-echo
-echo "*** Calling wasta-reset to re-initialize Wasta-Linux settings"
-echo
-# attempt to call as current user.  If root then wasta-reset will just exit.
-su "$CURRENT_USER" -c "wasta-reset $AUTO"
-LASTERRORLEVEL=$?
-if [ "$LASTERRORLEVEL" -ne "0" ];
+if [ "${XDG_CURRENT_DESKTOP}" == "X-Cinnamon" ];
 then
     echo
-    echo " *** ERROR in return from wasta-reset. Exiting."
+    echo "*** Calling wasta-reset to re-initialize Wasta-Linux settings"
     echo
-    exit 1
+    # attempt to call as current user.  If root then wasta-reset will just exit.
+    su "$CURRENT_USER" -c "wasta-reset $AUTO"
+    LASTERRORLEVEL=$?
+    if [ "$LASTERRORLEVEL" -ne "0" ];
+    then
+        echo
+        echo " *** ERROR in return from wasta-reset. Exiting."
+        echo
+        exit 1
+    fi
 fi
 
 echo

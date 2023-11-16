@@ -8,6 +8,11 @@
 #
 # ==============================================================================
 
+if ! [ "$(which snap)" ]; then
+  echo "snap is not installed..."
+  exit 0
+fi
+
 # ------------------------------------------------------------------------------
 # Setup script to run with superuser permissions
 # ------------------------------------------------------------------------------
@@ -43,7 +48,7 @@ if [ "$(whoami)" != "root" ]; then
             fi
         done
 
-        # re-run script with $SUDO_ID 
+        # re-run script with $SUDO_ID
         echo
         echo "Enter password for $SUDO_ID (need to enter twice)."
         su $SUDO_ID -c "sudo bash $0 $*"
@@ -69,7 +74,7 @@ fi
 if [ "${1^^}" == "AUTO" ];
 then
     AUTO="auto"
-    
+
     # needed for apt-get
     YES="--yes"
     DEBIAN_NONINTERACTIVE="env DEBIAN_FRONTEND=noninteractive"
@@ -102,6 +107,8 @@ then
     echo
 else
     echo
+    snap list
+    echo
     read -p "Remove installed snaps? (Y/n) " REMOVE_SNAPS
 fi
 
@@ -112,15 +119,15 @@ then
     echo
     echo "*** Removing installed snaps..."
     echo
-    
+
     # can't remove bare/core/snapd until other dependent snaps removed
-    snap list | awk '!/Name|core|bare|snapd/{print $1}' |
+    snap list | awk '!/Name/{print $1}' | sed -e '/core[0-9]\+\?$/d' -e '/bare$/d' -e '/snapd$/d' |
         while read snapname; do
             snap remove --purge "$snapname"
         done
 
     # remove core## snaps first so can later remove core and finally snapd
-    snap list | awk '/bare|core[0-9]/{print $1}' |
+    snap list | awk '!/Name/{print $1}' | sed -e '/core$/d' -e '/snapd$/d' |
         while read snapname; do
             snap remove --purge "$snapname"
         done
@@ -137,13 +144,21 @@ then
     rm -f /var/lib/snapd/snaps/core*.snap
 
     # finally can remove core and (after) snapd
-    snap list | awk '/core|snapd/{print $1}' |
+    snap list | awk '!/Name/{print $1}' |
         while read snapname; do
             snap remove --purge "$snapname"
         done
 
     # even remove --purge snaps does not remove them from cache.
     rm -rf /var/lib/snapd/cache/*
+
+    if ! [ $AUTO ]; then
+        echo
+        read -p "Did you want to remove snap altogether? (y/N) " PURGE_SNAP
+        if [ "${PURGE_SNAP^^}" == "Y" ]; then
+            apt-get purge --yes --quiet --quiet snapd
+        fi
+    fi
 fi
 
 # ------------------------------------------------------------------------------

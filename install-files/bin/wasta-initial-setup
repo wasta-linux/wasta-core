@@ -181,19 +181,6 @@ fi
 #    fi
 #fi
 
-echo
-echo "*** Running wasta-enable-zswap"
-echo
-bash wasta-enable-zswap $AUTO
-LASTERRORLEVEL=$?
-if [ "$LASTERRORLEVEL" -ne "0" ];
-then
-    echo
-    echo " *** ERROR in return from wasta-enable-zswap. Exiting."
-    echo
-    exit 1
-fi
-
 # Set default layout to redmond7 (ensures menu-label removed besides gschema defaults)
 if [ "$(which cinnamon-layout-system)" ];
 then

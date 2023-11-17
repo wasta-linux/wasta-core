@@ -1,0 +1,43 @@
+# To see statistics about the use of zswap, run "sudo grep -r . /sys/kernel/debug/zswap"
+# For actual compression ratio:
+# sudo bash -c 'echo "scale=2; " $(</sys/kernel/debug/zswap/stored_pages) " * 4096 /" $(</sys/kernel/debug/zswap/pool_total_size) | bc'
+
+# ZSWAP: swap to compressed memory before swapping to disk.
+# -especially good for low memory systems: 2x - 3x memory due to compression.
+# -especially good for SSDs: avoid temporary/repeated writes to disk
+
+# compressor: fast decompress | fast compress | high compression
+#    zstd           Y               maybe           maybe
+#    lz4            Y                 Y               N
+#    lz4hc (24.04)  Y                 N               Y
+
+# zpool:
+#  z3fold: up to 3x compression - general recommendation
+#  zsmalloc: new for 24.04 (assume better, little information)
+
+# max_pool_percent: percent of memory allowed for zswap
+#  -dynamically allocated, so it doesn’t take up any space
+#   until you actually start using it.
+#  -essentially reduces amount of cache memory available
+#  -swapping early (high /proc/sys/vm/swappiness value)
+#   reduces "memory" use since stored in "compressed zswap memory".
+
+[Unit]
+Description=zswap
+DefaultDependencies=no
+Before=swap.target   #must be active before "swapon /swap.img"
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/bin/sh -c ' \
+   echo zstd > /sys/module/zswap/parameters/compressor  \
+&& echo zsmalloc > /sys/module/zswap/parameters/zpool \
+&& echo 40 > /sys/module/zswap/parameters/max_pool_percent \
+&& echo 1 > /sys/module/zswap/parameters/enabled \
+|| exit 0 \
+'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=swap.target

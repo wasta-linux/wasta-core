@@ -325,6 +325,31 @@ glib-compile-schemas /usr/share/glib-2.0/schemas/ # > /dev/null 2>&1 || true;
 # /org/compiz/profiles/unity/plugins/expo/x-offset 48   NO SCHEMA
 
 # ------------------------------------------------------------------------------
+# ZSwap / enable systemd service
+
+# Ubuntu / Wasta-Linux 20.04+ swaps really easily, which kills performance.
+# zswap uses *COMPRESSED* RAM to buffer swap before writing to disk.
+# This is good for SSDs (less writing), and good for HDDs (no stalling).
+# zswap should NOT be used with zram (uncompress/recompress shuffling).
+# ------------------------------------------------------------------------------
+echo
+echo "*** enabling zswap systemd service"
+echo
+if [ "$(systemctl is-enabled zswap)" != "enabled" ];
+then
+    # is zswap enabled via grub boot?
+    USE_ZSWAP=$(grep zswap.enabled=1 /etc/default/grub)
+    if [ -z "${USE_ZSWAP}" ];
+    then
+        systemctl enable zswap --now
+    else
+        echo "   --- already enabled in grub"
+    fi
+else
+    echo "   --- already enabled"
+fi
+
+# ------------------------------------------------------------------------------
 # Finished
 # ------------------------------------------------------------------------------
 echo

@@ -121,13 +121,13 @@ then
     echo
 
     # can't remove bare/core/snapd until other dependent snaps removed
-    snap list | awk '!/Name/{print $1}' | sed -e '/core[0-9]\+\?$/d' -e '/bare$/d' -e '/snapd$/d' |
+    snap list | awk '!/Name/{print $1}' | sed -e '/^core[0-9]\+\?$/d' -e '/^bare$/d' -e '/^snapd$/d' |
         while read snapname; do
             snap remove --purge "$snapname"
         done
 
     # remove core## snaps first so can later remove core and finally snapd
-    snap list | awk '!/Name/{print $1}' | sed -e '/core$/d' -e '/snapd$/d' |
+    snap list | awk '!/Name/{print $1}' | sed -e '/^core$/d' -e '/^snapd$/d' |
         while read snapname; do
             snap remove --purge "$snapname"
         done

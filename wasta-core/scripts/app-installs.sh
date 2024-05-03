@@ -312,7 +312,7 @@ echo
 # sysstat: terminal - provides sar: system activity reporter
 # teckit: terminal - SIL teckit
 # testdisk: terminal - photorec tool for recovery of deleted files
-# thunderbird xul-ext-lightning: GUI email client
+# thunderbird xul-ext-lightning: GUI email client: 24.04+ we default to this over the snap version
 # tldr: terminal - gives 'tldr' summary of manpages
 # tlp: laptop power savings
 # traceroute: terminal
@@ -346,6 +346,7 @@ echo
 apt install \
         hplip-plugin \
     pinta \
+    youtube-dl \
 
 
 $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
@@ -464,7 +465,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     webp-pixbuf-loader \
     xmlstarlet \
     xsltproc \
-    youtube-dl \
     zim \
     "
 

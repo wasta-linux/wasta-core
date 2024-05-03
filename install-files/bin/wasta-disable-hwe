@@ -91,7 +91,7 @@ echo "========================================================================="
 echo "=== Wasta-Linux Disable HWE Support ====================================="
 echo "========================================================================="
 echo
-echo "Ubuntu 20.04+ auto-enables the HWE stack for their .1 ISOs, which"
+echo "Ubuntu 24.04+ auto-enables the HWE stack for their .0 ISOs, which"
 echo "means the kernel will be upgraded between major versions for newer"
 echo "hardware support. However, this can lead to working systems having"
 echo "hardware issues (wifi, graphics, Virtualbox support, etc) when the"
@@ -124,11 +124,9 @@ then
         linux-generic-hwe-24.04 \
         linux-headers-generic-hwe-24.04 \
         linux-image-generic-hwe-24.04"
-    $DEBIAN_NONINTERACTIVE bash -c "apt-get $YES purge \
-        linux-*headers-6.2* \
-        linux-image-6.2* \
-        linux-*headers-5.19* \
-        linux-image-5.19*"
+#    $DEBIAN_NONINTERACTIVE bash -c "apt-get $YES purge \
+#        linux-hwe-*headers-6.x* \
+#        linux-image-6.x*"
     $DEBIAN_NONINTERACTIVE bash -c "apt-get $YES autoremove"
 else
     echo

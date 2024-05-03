@@ -1,5 +1,6 @@
 install-files/applications                 usr/share
 install-files/apt.conf.d                   etc/apt
+install-files/apt/preferences.d            etc/apt
 install-files/bin                          usr
 install-files/dpkg.cfg.d                   etc/dpkg
 install-files/icons                        usr/share

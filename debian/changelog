@@ -1,3 +1,9 @@
+wasta-core (24.04.0.5) noble; urgency=medium
+
+  * update for ISO release of noble numbat
+
+ -- Justin Luth <jluth@mail.com>  Tue, 07 May 2024 14:31:02 -0400
+
 wasta-core (24.04.0.4) noble; urgency=medium
 
   * bump to 24.04.0.4 - initial release for noble numbat

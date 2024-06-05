@@ -1,3 +1,12 @@
+wasta-core (24.04.0.6) noble; urgency=medium
+
+  * app-installs: removing mintinstall, skype repo
+    - adding gnome-software
+  * debian/control: removing appmenu recommends, not necessary now
+    for qt5 app launching delay issue of  18.04/20.04
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Wed, 05 Jun 2024 15:51:23 -0500
+
 wasta-core (24.04.0.5) noble; urgency=medium
 
   * update for ISO release of noble numbat

@@ -2,6 +2,13 @@
 
 # ==============================================================================
 # wasta-core: app-installs.sh
+#
+# 2024-06-05 rik: not adding skype repo, using --no-install-recommends with
+#   wasta-remastersys so doesn't pull in zfs* etc, removing mintinstall and
+#   replacing with gnome-software for 24.04 (HOPEFULLY resource usage is
+#   improved over prior iterations - if still a problem consider NOT adding
+#   snap plugin to see if it helps)
+#
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -149,21 +156,6 @@ fi
 #echo
 #rm -f $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-6*
 
-# Add Skype repository (only supports amd64)
-if [ $ARCH == 'x86_64' ];
-then
-    if ! [ -e $APT_SOURCES_D/skype-stable.sources ] \
-    && ! [ -e $APT_SOURCES_D/skype-stable.list ];
-    then
-        echo
-        echo "*** Adding Skype Repository"
-        echo
-
-        echo "deb [arch=amd64] https://repo.skype.com/deb stable main" | \
-            tee $APT_SOURCES_D/skype-stable.list
-    fi
-fi
-
 # add Keyman PPA
 if ! [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.sources ] \
 && ! [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list ];
@@ -256,10 +248,9 @@ echo
 # gnome-maps: GUI map viewer
 # gnome-nettool: network tool GUI (traceroute, lookup, etc)
 # gnome-screenshot: GUI
-# DROPPED 22.04: bad performance / memory use gnome-software: GUI allows deb, flatpak, snap integration (no PPA or 3rd party
-#   deb repos however)
+# gnome-software:
 #   gnome-software-plugin-flatpak
-#   gnome-software-plugin-snap
+#   gnome-software-plugin-snapsud
 # gnome-system-monitor: GUI
 # gparted: GUI partition manager
 # grsync: GUI rsync tool
@@ -283,7 +274,6 @@ echo
 # libreoffice-sdbc-hsqldb: (pre-firebird) db backend for LO base
 # libtext-pdf-perl: provides pdfbklt (make A5 booklet from pdf)
 # meld: graphical text file compare utility
-# mintinstall: supports flatpak and deb
 # mkisofs: teminal - this version (from cdrtools source package) allows ISOs
 #   > 4GB in size. Alternative version from main repos (genisoimage package)
 #   does NOT allow this. Included in the wasta-applications ppa
@@ -332,7 +322,6 @@ echo
 # wasta-menus: applicationmenu limiting system
 # wasta-offline wasta-offline-setup: offline updates and installs
 # wasta-papirus papirus-icon-theme: more 'modern' icon theme
-# wasta-remastersys: create ISO of system
 # wasta-resources-core: wasta-core documentation and resources
 # wavemon: terminal - for wirelesssudo su network diagonstics
 # webp-pixbuf-loader: adds support for webp images (in eye-of-gnome etc)
@@ -343,11 +332,10 @@ echo
 
 
 # DISABLED temporariliy for Noble
-apt install \
-        hplip-plugin \
-    pinta \
-    youtube-dl \
-
+#apt install \
+#    hplip-plugin \
+#    pinta \
+#    youtube-dl \
 
 $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     aisleriot \
@@ -397,6 +385,9 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     gnome-maps \
     gnome-nettool \
     gnome-screenshot \
+    gnome-software \
+        gnome-software-plugin-flatpak \
+        gnome-software-plugin-snap \
     gnome-system-monitor \
     gparted \
     grsync \
@@ -419,7 +410,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
         libreoffice-sdbc-hsqldb \
     libtext-pdf-perl \
     meld \
-    mintinstall \
     mkisofs \
     modem-manager-gui \
     mtp-tools \
@@ -479,9 +469,10 @@ fi
 # Default packages not available on all arches
 # ------------------------------------------------------------------------------
 if [ "${ARCH}" == "x86_64" ]; then
-    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
-        wasta-remastersys \
-        "
+    # NOTE: using --no-install-recommends to not bring in lots of dependencies
+    # such as zfs*
+    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install --no-install-recommends \
+        wasta-remastersys ubiquity-slideshow-wasta"
 fi
 
 # ------------------------------------------------------------------------------

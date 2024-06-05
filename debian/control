@@ -8,8 +8,8 @@ Homepage: https://github.com/wasta-linux/wasta-core
 
 Package: wasta-core
 Architecture: all
-Depends: gnupg, ${misc:Depends}
-Recommends: appmenu-registrar, apt-xapian-index, at, debconf-utils, qt5-style-plugins, synaptic, wasta-backup, wasta-menus, wasta-offline, wasta-remastersys, wasta-resources-core, appmenu-registrar, vala-panel-appmenu-common
+Depends: gnupg, yad, ${misc:Depends}
+Recommends: at, debconf-utils, qt5-style-plugins, qt6-gtk-platformtheme, wasta-backup, wasta-menus, wasta-offline, wasta-resources-core
 Description: Wasta-Linux Core
  Wasta-Linux core system setup package
  .

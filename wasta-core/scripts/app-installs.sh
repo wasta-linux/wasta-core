@@ -309,8 +309,9 @@ echo
 # traffic-cop: graphical frontend to limit bandwidth per app
 # ttf-mscorefonts-installer: installs standard Microsoft fonts
 # ubiquity-frontend-gtk: add here so not needed to be downloaded by
-#   wasta-remastersys or if needs to be updated by app-adjustments.sh
-# ubiquity-slideshow-wasta:
+#   wasta-remastersys or if needs to be updated by wasta-app-tweaks
+#   ***24.04: ubiquity has a hard dependency of grub-pc which will force
+#   remove grub-efi* and break EFI installs.
 # ubuntu-restricted-extras: mp3, flash, etc.
 #  VBOX WARNING: gstreamer1.0-vaapi caused X.org to crash on gdm3/cinnamon login
 # uget uget-integrator: GUI download manager (DTA in Firefox abandoned)
@@ -439,7 +440,6 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     traceroute \
     traffic-cop \
     ttf-mscorefonts-installer \
-    ubiquity-frontend-gtk ubiquity-slideshow-wasta \
     ubuntu-restricted-extras \
     uget uget-integrator \
     uptimed \
@@ -466,7 +466,7 @@ fi
 
 
 # ------------------------------------------------------------------------------
-# Default packages not available on all arches
+# Separate installs due to ARCH limitation or not wanting recommended pkgs
 # ------------------------------------------------------------------------------
 if [ "${ARCH}" == "x86_64" ]; then
     # NOTE: using --no-install-recommends to not bring in lots of dependencies

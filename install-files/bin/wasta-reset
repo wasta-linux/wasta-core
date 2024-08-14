@@ -29,12 +29,15 @@ else
     AUTO=""
 fi
 
+YAD_CONF="--center --fixed --width=450 --borders=10 --window-icon=wasta-linux"
+
 if ! [ "$AUTO" ];
 then
     # prompt user
-    zenity --question --no-wrap --height=200 --width=450 \
-        --title="wasta [Reset]" \
-        --window-icon=/usr/share/icons/hicolor/scalable/apps/wasta-linux.svg \
+     yad $YAD_CONF \
+        --image "gtk-dialog-question" \
+        --title "wasta [Reset]" \
+        --button=No:1 --button=Yes:0 \
         --text="<b>This utility will RESET ALL
 your Desktop Interface Settings.</b>
 
@@ -42,9 +45,15 @@ All of your settings will be restored
 to the Wasta-Linux defaults.
 
 <b><i>Do you want to RESET ALL your Desktop Settings?</i></b>"
+    PROCEED=$?
+    #read -p "output: $PROCEED"
 
-    if [ "$?" -ne 0 ];
+    if [ "$PROCEED" == 0 ];
     then
+        echo
+        echo " *** Script Entry: wasta-reset (interactive mode)"
+        echo
+    else
         # User didn't say yes: exit
         exit 0
     fi
@@ -52,8 +61,9 @@ else
     echo
     echo " *** Script Entry: wasta-reset (auto mode)"
     echo
-    MSG="Starting wasta [Reset]...\n\n"
 fi
+
+MSG="Starting wasta [Reset]...\n\n"
 
 # ------------------------------------------------------------------------------
 # Processing based on detected sessions
@@ -117,16 +127,17 @@ then
     MSG+="User settings for <b>Cinnamon Desktop</b> reset.\n\n"
 fi
 
-if [ -e /usr/share/xsessions/ubuntu.desktop ] | \
+if [ -e /usr/share/wayland/ubuntu.desktop ] | \
    [ -e /usr/share/xsessions/gnome.desktop ] | \
    [ -e /usr/share/xsessions/wasta-gnome.desktop ];
 then
-    # Unity and GNOME Reset
+    # GNOME Reset
 
     # --------------------------------------------------------------------------
     # Save keys needing to be restored later
     # --------------------------------------------------------------------------
     SAVE_BACKGROUND=$(gsettings get org.gnome.desktop.background picture-uri)
+    SAVE_BACKGROUND_DARK=$(gsettings get org.gnome.desktop.background picture-uri-darl)
     SAVE_KEYBOARDS=$(gsettings get org.gnome.desktop.input-sources sources)
     SAVE_GNOME_FAVORITES=$(gsettings get org.gnome.shell favorite-apps)
 
@@ -134,19 +145,28 @@ then
     # Reset all shared GNOME and Nautilus dconf settings to defaults
     # --------------------------------------------------------------------------
     gsettings reset-recursively org.gnome.nautilus
-    # schema not defined: gsettings reset-recursively org.gnome.desktop
-    dconf reset -f /org/gnome/desktop/
-    # schema not defined: gsettings reset-recursively org.gnome.settings-daemon
-    dconf reset -f /org/gnome/settings-daemon/
+
+    gsettings reset-recursively org.gnome.desktop.app-folders
+    gsettings reset-recursively org.gnome.desktop.interface
+    gsettings reset-recursively org.gnome.desktop.lockdown
+    gsettings reset-recursively org.gnome.desktop.peripherals
+    gsettings reset-recursively org.gnome.desktop.privacy
+    gsettings reset-recursively org.gnome.desktop.screensaver
+    gsettings reset-recursively org.gnome.desktop.sound
+    gsettings reset-recursively org.gnome.desktop.wm.preferences
+    gsettings reset-recursively org.gnome.desktop.wm.keybindings
+
+    gsettings reset-recursively org.gnome.settings-daemon.peripherals
+    gsettings reset-recursively org.gnome.settings-daemon.plugins
 
     # not resetting org.gnome.shell.extensions.*:
-    # schema not defined: gsettings reset-recursively org.gnome.shell
-    dconf reset -f /org/gnome/shell/
+    gsettings reset-recursively org.gnome.shell
 
     # --------------------------------------------------------------------------
     # Restore saved shared keys
     # --------------------------------------------------------------------------
     gsettings set org.gnome.desktop.background picture-uri "$SAVE_BACKGROUND"
+    gsettings set org.gnome.desktop.background picture-uri "$SAVE_BACKGROUND_DARK"
     gsettings set org.gnome.desktop.input-sources sources "$SAVE_KEYBOARDS"
     gsettings set org.gnome.shell favorite-apps "$SAVE_GNOME_FAVORITES"
 
@@ -188,20 +208,22 @@ fi
 # ------------------------------------------------------------------------------
 sleep 2
 
-case "$XDG_CURRENT_DESKTOP" in
-X-Cinnamon)
-    MSG+="<b>Cinnamon Active:</b> Restarting...\n\n"
+case "$DESKTOP_SESSION" in
+cinnamon)
+    MSG+="<b>Cinnamon Active:</b> restarting...\n\n"
     nohup >/dev/null 2>&1 cinnamon --replace & >/dev/null 2>&1
 ;;
 
-ubuntu:GNOME|wasta-gnome:ubuntu:GNOME)
-    MSG+="<b>GNOME Active:</b> Restarting...\n\n"
-    killall -SIGQUIT gnome-shell
+#ubuntu:GNOME|wasta-gnome:ubuntu:GNOME)
+    # 24.04: wayland or xorg sessions both have problems when attempting to
+    #   restart
+    #MSG+="<b>GNOME Active:</b> reboot to see changes...\n\n"
+    # killall -SIGQUIT gnome-shell
     # nohup >/dev/null 2>&1 gnome-shell --replace & >/dev/null 2>&1
-;;
+#;;
 
 *)
-    MSG+="<b>Desktop restart not supported:</b> $XDG_CURRENT_DESKTOP\n\n"
+    MSG+="<b>Desktop restart not supported:</b> $DESKTOP_SESSION\n\n"
 ;;
 
 esac
@@ -217,8 +239,11 @@ if ! [ "$AUTO" ];
 then
     # prompt user
     sleep 2
-    zenity --info --title "wasta [Reset]: Finished" --no-wrap --height=150 --width=450 \
-        --window-icon=/usr/share/icons/hicolor/scalable/apps/wasta-linux.svg \
+
+    yad $YAD_CONF \
+        --image "gtk-dialog-info" \
+        --title "wasta [Reset]: Finished" \
+        --button=OK:0 \
         --text="$MSG"
 else
     echo

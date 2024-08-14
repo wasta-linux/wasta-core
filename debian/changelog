@@ -1,3 +1,10 @@
+wasta-core (24.04.0.9) noble; urgency=medium
+
+  * wasta-reset: refactor to use yad
+    - disable restarting gnome-shell
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Wed, 14 Aug 2024 16:58:26 -0500
+
 wasta-core (24.04.0.8) noble; urgency=medium
 
   * app-installs: re-adding ubiquity: having grub-pc is OK

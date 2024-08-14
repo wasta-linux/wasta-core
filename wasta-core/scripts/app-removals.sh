@@ -10,11 +10,11 @@
 #   No fancy "double click" here because normal user should never need to run
 if [ $(id -u) -ne 0 ]
 then
-	echo
-	echo "You must run this script with sudo." >&2
-	echo "Exiting...."
-	sleep 5s
-	exit 1
+    echo
+    echo "You must run this script with sudo." >&2
+    echo "Exiting...."
+    sleep 5s
+    exit 1
 fi
 
 # ------------------------------------------------------------------------------
@@ -57,10 +57,9 @@ echo
 # deja-dup: we use wasta-backup
 # empathy: chat client
 # firefox: we now default to firefox-esr (deb not snap)
-# fonts-noto-cjk: conflicts with font-manager: newer font-manager from ppa
-#   handles it, but it is too different to use
 # fonts-*: non-english fonts
 #   ttf-* fonts: non-english font families
+# gnome-text-editor: we still use gedit instead
 # gnome-sushi:confusing for some
 # landscape-client-ui-install: pay service only for big corporations
 # mpv: media player - not sure how this got installed
@@ -96,7 +95,6 @@ pkgToRemoveListFull="\
         fonts-nakula \
         fonts-navilu \
         fonts-nanum \
-        fonts-noto-* \
         fonts-orya* \
         fonts-pagul \
         fonts-sahadeva \
@@ -118,6 +116,7 @@ pkgToRemoveListFull="\
         ttf-unfonts-core \
         ttf-wqy-microhei \
     gnome-sushi unoconv \
+    gnome-text-editor \
     landscape-client-ui-install \
     mpv \
     totem \

@@ -1,2 +1,4 @@
-wasta-core: package-installs-apt-keyring
 wasta-core: binary-without-manpage
+wasta-core: package-installs-apt-keyring
+wasta-core: package-installs-apt-preferences
+wasta-core: systemd-service-file-refers-to-unusual-wantedby-target

@@ -132,82 +132,78 @@ then
 fi
 
 # add Wasta-Linux PPA
-if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.sources ] \
-&& ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list ];
+REPO="wasta-linux-ubuntu-wasta-$SERIES"
+if ! [ -e $APT_SOURCES_D/$REPO.sources ] \
+&& ! [ -e $APT_SOURCES_D/$REPO.list ];
 then
     echo
     echo "*** Adding Wasta-Linux PPA"
     echo
 
-    echo "deb http://ppa.launchpadcontent.net/wasta-linux/wasta/ubuntu $SERIES main" | \
-        tee $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list
-    echo "# deb-src http://ppa.launchpadcontent.net/wasta-linux/wasta/ubuntu $SERIES main" | \
-        tee -a $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list
-elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.sources ]; then
-    # found, but ensure Wasta-Linux PPA ACTIVE (user could have accidentally disabled)
-    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.sources
-elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list ]; then
-    # found, but ensure Wasta-Linux PPA ACTIVE (user could have accidentally disabled)
+    cp $DIR/resources/sources.list.d/$REPO.sources $APT_SOURCES_D/
+elif [ -e $APT_SOURCES_D/$REPO.sources ]; then
+    # found, but ensure REPO ACTIVE (user could have accidentally disabled)
+    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/$REPO.sources
+elif [ -e $APT_SOURCES_D/$REPO.list ]; then
+    # found, but ensure REPO ACTIVE (user could have accidentally disabled)
     # DO NOT match any lines ending in #wasta
     sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
-        $APT_SOURCES_D/wasta-linux-ubuntu-wasta-$SERIES.list
+        $APT_SOURCES_D/$REPO.list
 fi
 
 # add Wasta-Apps PPA
-if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.sources ] \
-&& ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list ];
+REPO="wasta-linux-ubuntu-wasta-apps-$SERIES"
+if ! [ -e $APT_SOURCES_D/$REPO.sources ] \
+&& ! [ -e $APT_SOURCES_D/$REPO.list ];
 then
     echo
     echo "*** Adding Wasta-Linux Apps PPA"
     echo
 
-    echo "deb http://ppa.launchpadcontent.net/wasta-linux/wasta-apps/ubuntu $SERIES main" | \
-        tee $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list
-    echo "# deb-src http://ppa.launchpadcontent.net/wasta-linux/wasta-apps/ubuntu $SERIES main" | \
-        tee -a $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list
-elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.sources ]; then
-    # found, but ensure Wasta-Apps PPA ACTIVE (user could have accidentally disabled)
-    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.sources
-elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list ]; then
-    # found, but ensure Wasta-Apps PPA ACTIVE (user could have accidentally disabled)
-    # DO NOT match any lines ending in #wasta   
+    cp $DIR/resources/sources.list.d/$REPO.sources $APT_SOURCES_D/
+elif [ -e $APT_SOURCES_D/$REPO.sources ]; then
+    # found, but ensure REPO ACTIVE (user could have accidentally disabled)
+    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/$REPO.sources
+elif [ -e $APT_SOURCES_D/$REPO.list ]; then
+    # found, but ensure REPO ACTIVE (user could have accidentally disabled)
+    # DO NOT match any lines ending in #wasta
     sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
-        $APT_SOURCES_D/wasta-linux-ubuntu-wasta-apps-$SERIES.list
+        $APT_SOURCES_D/$REPO.list
 fi
 
 # add Mozilla Team PPA
-if ! [ -e $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.sources ] \
-&& ! [ -e $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list ];
+REPO="mozillateam-ubuntu-ppa-$SERIES"
+if ! [ -e $APT_SOURCES_D/$REPO.sources ] \
+&& ! [ -e $APT_SOURCES_D/$REPO.list ];
 then
     echo
     echo "*** Adding Mozilla Team PPA"
     echo
 
-    echo "deb http://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu $SERIES main" | \
-        tee $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list
-    echo "# deb-src http://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu $SERIES main" | \
-        tee -a $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list
-elif [ -e $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.sources ]; then
-    # found, but ensure Mozilla Team PPA ACTIVE (user could have accidentally disabled)
-    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.sources
-elif [ -e $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list ]; then
-    # found, but ensure Mozilla Team PPA ACTIVE (user could have accidentally disabled)
-    # DO NOT match any lines ending in #wasta    
+    cp $DIR/resources/sources.list.d/$REPO.sources $APT_SOURCES_D/
+elif [ -e $APT_SOURCES_D/$REPO.sources ]; then
+    # found, but ensure REPO ACTIVE (user could have accidentally disabled)
+    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/$REPO.sources
+elif [ -e $APT_SOURCES_D/$REPO.list ]; then
+    # found, but ensure REPO ACTIVE (user could have accidentally disabled)
+    # DO NOT match any lines ending in #wasta
     sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
-        $APT_SOURCES_D/mozillateam-ubuntu-ppa-$SERIES.list
+        $APT_SOURCES_D/$REPO.list
 fi
 
 # IF Wasta-Testing PPA found, remove (do NOT want users having this, also
 #   developers should only temporarily have it)
-if [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-testing-$SERIES.sources ] \
-&& [ -e $APT_SOURCES_D/wasta-linux-ubuntu-wasta-testing-$SERIES.list ];
+REPO="wasta-linux-ubuntu-wasta-testing-$SERIES"
+if [ -e $APT_SOURCES_D/$REPO.sources ] \
+|| [ -e $APT_SOURCES_D/$REPO.list ];
 then
     echo
     echo "*** REMOVING Wasta-Linux Testing PPA"
     echo
-    rm -f $APT_SOURCES_D/wasta-linux-ubuntu-wasta-testing-$SERIES*
+    rm -f $APT_SOURCES_D/$REPO*
 fi
 
+# 24.04: do we just delete this??
 # IF Skype Repository found, ensure that it is set for [arch=amd64] so
 #   won't give errors when 32bit repo not found (skype only publishes amd64)
 if [ -e $APT_SOURCES_D/skype-stable.list ];

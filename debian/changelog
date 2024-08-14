@@ -1,3 +1,13 @@
+wasta-core (24.04.0.8) noble; urgency=medium
+
+  * app-installs: re-adding ubiquity: having grub-pc is OK
+    - adding gedit
+  * app-removals: removing gnome-text-editor
+  * postinst and app-installs:
+    - refactor REPO adjustments to create .sources instead of .list
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Wed, 14 Aug 2024 14:20:12 -0500
+
 wasta-core (24.04.0.7) noble; urgency=medium
 
   * app-installs: removing ubiquity, it has a grub-pc dependency for

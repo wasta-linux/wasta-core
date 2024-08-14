@@ -3,12 +3,6 @@
 # ==============================================================================
 # wasta-core: app-installs.sh
 #
-# 2024-06-05 rik: not adding skype repo, using --no-install-recommends with
-#   wasta-remastersys so doesn't pull in zfs* etc, removing mintinstall and
-#   replacing with gnome-software for 24.04 (HOPEFULLY resource usage is
-#   improved over prior iterations - if still a problem consider NOT adding
-#   snap plugin to see if it helps)
-#
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -131,24 +125,23 @@ then
 fi
 
 # add LibreOffice 24.2 PPA
-#if ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-5-$SERIES.sources ] \
-#&& ! [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-5-$SERIES.list ];
+#REPO="wasta-linux-ubuntu-libreoffice-24-2-$SERIES"
+#if ! [ -e $APT_SOURCES_D/$REPO.sources ] \
+#&& ! [ -e $APT_SOURCES_D/$REPO.list ];
 #then
 #    echo
 #    echo "*** Adding LibreOffice 24.2 PPA"
 #    echo
-#    echo "deb http://ppa.launchpadcontent.net/wasta-linux/libreoffice-24-2/ubuntu $SERIES main" | \
-#        tee $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.list
-#    echo "# deb-src http://ppa.launchpadcontent.net/wasta-linux/libreoffice-24-2/ubuntu $SERIES main" | \
-#        tee -a $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.list
-#elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.sources ]; then
-#    # found, but ensure LibreOffice PPA ACTIVE (user could have accidentally disabled)
-#    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.sources
-#elif [ -e $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.list ]; then
-#    # found, but ensure LibreOffice PPA ACTIVE (user could have accidentally disabled)
+#
+#    cp $DIR/resources/sources.list.d/$REPO.sources $APT_SOURCES_D/
+#elif [ -e $APT_SOURCES_D/$REPO.sources ]; then
+#    # found, but ensure REPO ACTIVE (user could have accidentally disabled)
+#    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/$REPO.sources
+#elif [ -e $APT_SOURCES_D/$REPO.list ]; then
+#    # found, but ensure REPO ACTIVE (user could have accidentally disabled)
 #    # DO NOT match any lines ending in #wasta
 #    sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
-#       $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-24-2-$SERIES.list
+#        $APT_SOURCES_D/$REPO.list
 #fi
 
 #echo
@@ -157,24 +150,23 @@ fi
 #rm -f $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-6*
 
 # add Keyman PPA
-if ! [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.sources ] \
-&& ! [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list ];
+REPO="keymanapp-ubuntu-keyman-$SERIES"
+if ! [ -e $APT_SOURCES_D/$REPO.sources ] \
+&& ! [ -e $APT_SOURCES_D/$REPO.list ];
 then
     echo
     echo "*** Adding Keyman PPA"
     echo
-    echo "deb http://ppa.launchpadcontent.net/keymanapp/keyman/ubuntu $SERIES main" | \
-        tee $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list
-    echo "# deb-src http://ppa.launchpadcontent.net/keymanapp/keyman/ubuntu $SERIES main" | \
-        tee -a $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list
-elif [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.sources ]; then
-    # found, but ensure Keyman PPA ACTIVE (user could have accidentally disabled)
-    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.sources
-elif [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list ]; then
-     # found, but ensure Keyman PPA ACTIVE (user could have accidentally disabled)
-     # DO NOT match any lines ending in #wasta
-     sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
-        $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list
+
+    cp $DIR/resources/sources.list.d/$REPO.sources $APT_SOURCES_D/
+elif [ -e $APT_SOURCES_D/$REPO.sources ]; then
+    # found, but ensure REPO ACTIVE (user could have accidentally disabled)
+    sed -i -e '\@^Enabled: no$@d' $APT_SOURCES_D/$REPO.sources
+elif [ -e $APT_SOURCES_D/$REPO.list ]; then
+    # found, but ensure REPO ACTIVE (user could have accidentally disabled)
+    # DO NOT match any lines ending in #wasta
+    sed -i -e '/#wasta$/! s@.*\(deb http[s]*://ppa.launchpadcontent.net\)@\1@' \
+        $APT_SOURCES_D/$REPO.list
 fi
 
 apt-get update
@@ -238,6 +230,8 @@ echo
 # gcolor3: color pickerg
 # gddrescue: data recovery tool
 # gdebi: graphical .deb installer
+# gedit:
+#   gedit-plugins
 # gimp: advanced graphics editor
 # git: terminal - command-line git
 # goldendict goldendict-wordnet: more advanced dictionary/thesaurus tool than artha
@@ -250,7 +244,7 @@ echo
 # gnome-screenshot: GUI
 # gnome-software:
 #   gnome-software-plugin-flatpak
-#   gnome-software-plugin-snapsud
+#   gnome-software-plugin-snap
 # gnome-system-monitor: GUI
 # gparted: GUI partition manager
 # grsync: GUI rsync tool
@@ -375,6 +369,8 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     gcolor3 \
     gddrescue \
     gdebi \
+    gedit \
+        gedit-plugins \
     gimp \
     git \
     goldendict \
@@ -472,7 +468,7 @@ if [ "${ARCH}" == "x86_64" ]; then
     # NOTE: using --no-install-recommends to not bring in lots of dependencies
     # such as zfs*
     $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install --no-install-recommends \
-        wasta-remastersys ubiquity-slideshow-wasta"
+        wasta-remastersys ubiquity-frontend-gtk ubiquity-slideshow-wasta"
 fi
 
 # ------------------------------------------------------------------------------

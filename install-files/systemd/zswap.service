@@ -23,9 +23,10 @@
 #   reduces "memory" use since stored in "compressed zswap memory".
 
 [Unit]
+#in order to work, zswap must be enabled before "swapon /swap.img"
 Description=zswap
 DefaultDependencies=no
-Before=swap.target   #must be active before "swapon /swap.img"
+Before=swap.target
 
 [Service]
 Type=oneshot

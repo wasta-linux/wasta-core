@@ -145,19 +145,20 @@ fi
 #echo
 #rm -f $APT_SOURCES_D/wasta-linux-ubuntu-libreoffice-7-1*
 
+# 2024-09-04 rik: skype has discontinued their repo, disabling
 # Add Skype repository (only supports amd64)
-if [ $ARCH == 'x86_64' ];
-then
-    if ! [ -e $APT_SOURCES_D/skype-stable.list ];
-    then
-        echo
-        echo "*** Adding Skype Repository"
-        echo
+#if [ $ARCH == 'x86_64' ];
+#then
+#    if ! [ -e $APT_SOURCES_D/skype-stable.list ];
+#    then
+#        echo
+#        echo "*** Adding Skype Repository"
+#        echo
 
-        echo "deb [arch=amd64] https://repo.skype.com/deb stable main" | \
-            tee $APT_SOURCES_D/skype-stable.list
-    fi
-fi
+#        echo "deb [arch=amd64] https://repo.skype.com/deb stable main" | \
+#            tee $APT_SOURCES_D/skype-stable.list
+#    fi
+#fi
 
 # add Keyman PPA
 if ! [ -e $APT_SOURCES_D/keymanapp-ubuntu-keyman-$SERIES.list ];

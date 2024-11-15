@@ -359,6 +359,7 @@ $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
     fonts-crosextra-carlito \
     fonts-sil-andika \
         fonts-sil-andika-compact \
+        fonts-sil-andikanewbasic \
         fonts-sil-annapurna \
         fonts-sil-charis \
         fonts-sil-charis-compact \

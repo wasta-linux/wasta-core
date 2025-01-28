@@ -12,8 +12,8 @@
 #    lz4hc (24.04)  Y                 N               Y
 
 # zpool:
-#  z3fold: up to 3x compression - general recommendation
-#  zsmalloc: new for 24.04 (assume better, little information)
+#  z3fold (deprecated 6.14): up to 3x compression - general recommendation
+#  zsmalloc: new for 24.04 (recommended as z3fold replacement)
 
 # max_pool_percent: percent of memory allowed for zswap
 #  -dynamically allocated, so it doesn’t take up any space

@@ -129,7 +129,7 @@ fi
 #echo
 #echo "*** Ensuring HWE stack is installed"
 #echo
-#$DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
+#$DEBIAN_NONINTERACTIVE bash -c "apt-get $YES install \
 #    linux-generic-hwe-18.04 \
 #    xserver-xorg-hwe-18.04 \
 #    virtualbox-guest-utils-hwe \

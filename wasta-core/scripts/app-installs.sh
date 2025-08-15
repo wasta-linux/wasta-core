@@ -185,7 +185,7 @@ echo
 echo "*** Install All Updates"
 echo
 
-$DEBIAN_NONINERACTIVE apt-get $YES dist-upgrade
+$DEBIAN_NONINTERACTIVE apt-get $YES dist-upgrade
 
 LASTERRORLEVEL=$?
 if [ "$LASTERRORLEVEL" -ne "0" ];
@@ -332,7 +332,7 @@ echo
 #    pinta \
 #    youtube-dl \
 
-$DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
+$DEBIAN_NONINTERACTIVE bash -c "apt-get $YES install \
     aisleriot \
     adb \
     apt-rdepends \
@@ -468,7 +468,7 @@ fi
 if [ "${ARCH}" == "x86_64" ]; then
     # NOTE: using --no-install-recommends to not bring in lots of dependencies
     # such as zfs*
-    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install --no-install-recommends \
+    $DEBIAN_NONINTERACTIVE bash -c "apt-get $YES install --no-install-recommends \
         wasta-remastersys ubiquity-frontend-gtk ubiquity-slideshow-wasta"
 fi
 

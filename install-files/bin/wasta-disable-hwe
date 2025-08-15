@@ -117,10 +117,10 @@ then
     echo
     echo "*** DISABLING HWE Support..."
     echo
-    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
+    $DEBIAN_NONINTERACTIVE bash -c "apt-get $YES install \
         linux-generic"
 
-    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES purge \
+    $DEBIAN_NONINTERACTIVE bash -c "apt-get $YES purge \
         linux-generic-hwe-24.04 \
         linux-headers-generic-hwe-24.04 \
         linux-image-generic-hwe-24.04"
@@ -132,10 +132,10 @@ else
     echo
     echo "*** ENABLING HWE Support..."
     echo
-    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES install \
+    $DEBIAN_NONINTERACTIVE bash -c "apt-get $YES install \
         linux-generic-hwe-24.04"
 
-    $DEBIAN_NONINERACTIVE bash -c "apt-get $YES purge \
+    $DEBIAN_NONINTERACTIVE bash -c "apt-get $YES purge \
         linux-generic \
         linux-headers-generic \
         linux-image-generic"
